@@ -22,7 +22,8 @@
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  */
-
+
+#include <ctype.h>
 #include <stdio.h>
 #include <pwd.h>
 #include <errno.h>

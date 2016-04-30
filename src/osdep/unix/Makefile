@@ -56,9 +56,9 @@ GCC4CFLAGS= $(GCCCFLAGS) -Wno-pointer-sign
 
 # Extended flags needed for SSL.  You may need to modify.
 
-SSLDIR=/usr/local/ssl
-SSLCERTS=$(SSLDIR)/certs
-SSLKEYS=$(SSLCERTS)
+SSLDIR=/usr
+SSLCERTS=/etc/ssl/certs
+SSLKEYS=/etc/ssl/private
 SSLINCLUDE=$(SSLDIR)/include
 SSLLIB=$(SSLDIR)/lib
 
@@ -99,7 +99,7 @@ LOGINPW=std
 SIGTYPE=bsd
 CRXTYPE=std
 ACTIVEFILE=/usr/lib/news/active
-SPOOLDIR=/usr/spool
+SPOOLDIR=/var
 MAILSPOOL=$(SPOOLDIR)/mail
 NEWSSPOOL=$(SPOOLDIR)/news
 RSHPATH=/usr/ucb/rsh
@@ -922,7 +922,7 @@ osdep.o:mail.h misc.h env.h fs.h ftl.h nl.h tcp.h \
 	gr_wait.c gr_wait4.c gr_waitp.c \
 	kerb_mit.c \
 	auth_ext.c auth_gss.c auth_log.c auth_md5.c auth_pla.c \
-	pmatch.c scandir.c setpgrp.c strerror.c truncate.c write.c \
+	pmatch.c setpgrp.c strerror.c truncate.c write.c \
 	memmove.c memmove2.c memset.c \
 	tz_bsd.c tz_nul.c tz_sv4.c \
 	write.c sslstdio.c \

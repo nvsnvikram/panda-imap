@@ -31,9 +31,9 @@
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE 1
 #endif /* _XOPEN_SOURCE */
-#ifndef _BSD_SOURCE
-#define _BSD_SOURCE 1
-#endif /* _BSD_SOURCE */
+#ifndef _DEFAULT_SOURCE
+#define _DEFAULT_SOURCE 1
+#endif /* _DEFAULT_SOURCE */
 
 /* end Debian Linux on Alpha strangeness */
 
@@ -56,6 +56,7 @@
 #define direct dirent
 
 #define flock safe_flock
+int safe_flock (int fd,int op);
 
 #define utime portable_utime
 int portable_utime (char *file,time_t timep[2]);

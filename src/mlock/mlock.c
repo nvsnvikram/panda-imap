@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <sysexits.h>
 #include <syslog.h>
+#include <time.h>
 #include <grp.h>
 #include <sys/types.h>
 #include <sys/file.h>
@@ -40,6 +41,7 @@
 #include <netdb.h>
 #include <ctype.h>
 #include <string.h>
+#include <unistd.h>
 
 #define LOCKTIMEOUT 5		/* lock timeout in minutes */
 #define LOCKPROTECTION 0664
