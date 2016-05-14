@@ -543,12 +543,6 @@ pt1:	an
 hxd:
 	$(BUILD) BUILDTYPE=hpx PASSWDTYPE=dce
 
-# Amiga
-
-ami am2 ama amn:
-	$(MAKE) an LN=cp SYSTEM=amiga
-	$(BUILD) BUILDTYPE=$@ LN=cp
-
 
 # Courtesy entries for Microsoft systems
 

@@ -58,7 +58,6 @@ Sources:
  . src/mailutil		pre-processed mailbox utility sources
  . src/mlock		pre-processed mailbox locking sources
  . src/mtest		pre-processed c-client testbed sources
- . src/osdep/amiga	pre-processed Amiga-specific sources
  . src/osdep/dos	pre-processed DOS-specific sources
  . src/osdep/mac	pre-processed Mac-specific sources
  . src/osdep/nt		pre-processed NT-specific sources
