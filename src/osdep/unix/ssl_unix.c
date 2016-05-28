@@ -99,7 +99,7 @@ static struct ssl_driver ssldriver = {
 				/* non-NIL if doing SSL primary I/O */
 static SSLSTDIOSTREAM *sslstdio = NIL;
 static char *start_tls = NIL;	/* non-NIL if start TLS requested */
-
+
 /* One-time SSL initialization */
 
 static int sslonceonly = 0;
@@ -108,30 +108,37 @@ void ssl_onceonlyinit (void)
 {
   if (!sslonceonly++) {		/* only need to call it once */
     int fd;
-    char tmp[MAILTMPLEN];
+    char template[] = "XXXXXX";
     struct stat sbuf;
 				/* if system doesn't have /dev/urandom */
-    if (stat ("/dev/urandom",&sbuf)) {
-      while ((fd = open (tmpnam (tmp),O_WRONLY|O_CREAT|O_EXCL,0600)) < 0)
-	sleep (1);
-      unlink (tmp);		/* don't need the file */
-      fstat (fd,&sbuf);		/* get information about the file */
-      close (fd);		/* flush descriptor */
-				/* not great but it'll have to do */
-      sprintf (tmp + strlen (tmp),"%.80s%lx%.80s%lx%lx%lx%lx%lx",
-	       tcp_serveraddr (),(unsigned long) tcp_serverport (),
-	       tcp_clientaddr (),(unsigned long) tcp_clientport (),
-	       (unsigned long) sbuf.st_ino,(unsigned long) time (0),
-	       (unsigned long) gethostid (),(unsigned long) getpid ());
-      RAND_seed (tmp,strlen (tmp));
+    if (stat ("/dev/urandom", &sbuf)) {
+
+      while (0 > (fd = mkstemp (template)))
+        sleep(1);
+
+      unlink (template);        /* don't need the file */
+      fstat (fd,&sbuf);         /* get information about the file */
+      close (fd);               /* flush descriptor */
+                                /* not great but it'll have to do */
+      sprintf (template + strlen (template),
+               "%.80s%lx%.80s%lx%lx%lx%lx%lx",
+               tcp_serveraddr (),
+               (unsigned long) tcp_serverport (),
+               tcp_clientaddr (),
+               (unsigned long) tcp_clientport (),
+               (unsigned long) sbuf.st_ino,
+               (unsigned long) time (0),
+               (unsigned long) gethostid (),
+               (unsigned long) getpid ());
+      RAND_seed (template, strlen (template));
     }
-				/* apply runtime linkage */
+                                /* apply runtime linkage */
     mail_parameters (NIL,SET_SSLDRIVER,(void *) &ssldriver);
     mail_parameters (NIL,SET_SSLSTART,(void *) ssl_start);
-    SSL_library_init ();	/* add all algorithms */
+    SSL_library_init ();        /* add all algorithms */
   }
 }
-
+
 /* SSL open
  * Accepts: host name
  *	    contact service name

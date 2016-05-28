@@ -22,20 +22,8 @@
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  */
-
-/*
- *** These lines are claimed to be necessary to build on Debian Linux on an
- *** Alpha.
- */
 
-#ifndef _XOPEN_SOURCE
-#define _XOPEN_SOURCE 1
-#endif /* _XOPEN_SOURCE */
-#ifndef _DEFAULT_SOURCE
-#define _DEFAULT_SOURCE 1
-#endif /* _DEFAULT_SOURCE */
-
-/* end Debian Linux on Alpha strangeness */
+#define _GNU_SOURCE
 
 #include <stdlib.h>
 #include <string.h>
