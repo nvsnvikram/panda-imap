@@ -28,7 +28,7 @@
  * Biomedical Research Technology Program of the NationalInstitutes of Health
  * under grant number RR-00785.
  */
-
+
 #include <stdio.h>
 #include <ctype.h>
 #include <signal.h>
@@ -54,7 +54,7 @@
 #  define MACOS 0
 # endif
 #endif
-
+
 char *curhst = NIL;		/* currently connected host */
 char *curusr = NIL;		/* current login user */
 char personalname[MAILTMPLEN];	/* user's personal name */
@@ -77,7 +77,7 @@ void overview_header (MAILSTREAM *stream,unsigned long uid,OVERVIEW *ov,
 void header (MAILSTREAM *stream,long msgno);
 void display_body (BODY *body,char *pfx,long i);
 void status (MAILSTREAM *stream);
-void prompt (char *msg,char *txt);
+void prompt (char *msg,char *txt,int size);
 void smtptest (long debug);
 
 /* Main program - initialization */
@@ -114,13 +114,13 @@ int main ()
 #endif
   curhst = cpystr (mylocalhost ());
   puts ("MTest -- C client test program");
-  if (!*personalname) prompt ("Personal name: ",personalname);
+  if (!*personalname) prompt ("Personal name: ",personalname,MAILTMPLEN);
 				/* user wants protocol telemetry? */
-  prompt ("Debug protocol (y/n)?",tmp);
+  prompt ("Debug protocol (y/n)?",tmp,MAILTMPLEN);
   ucase (tmp);
   debug = (tmp[0] == 'Y') ? T : NIL;
   do {
-    prompt ("Mailbox ('?' for help): ",tmp);
+    prompt ("Mailbox ('?' for help): ",tmp,MAILTMPLEN);
     if (!strcmp (tmp,"?")) {
       puts ("Enter INBOX, mailbox name, or IMAP mailbox as {host}mailbox");
       puts ("Known local mailboxes:");
@@ -156,7 +156,9 @@ void mm (MAILSTREAM *stream,long debug)
   BODY *body;
   status (stream);		/* first report message status */
   while (stream) {
-    prompt ("MTest>",cmd);	/* prompt user, get command */
+    prompt ("MTest>",
+            cmd,
+            MAILTMPLEN);	/* prompt user, get command */
 				/* get argument */
     if (arg = strchr (cmd,' ')) *arg++ = '\0';
     switch (*ucase (cmd)) {	/* dispatch based on command */
@@ -251,7 +253,7 @@ void mm (MAILSTREAM *stream,long debug)
       }
 				/* get the new mailbox */
       while (!(stream = mail_open (stream,arg,debug))) {
-	prompt ("Mailbox: ",arg);
+	prompt ("Mailbox: ",arg,MAILTMPLEN);
 	if (!arg[0]) break;
       }
       last = 0;
@@ -600,12 +602,16 @@ void status (MAILSTREAM *stream)
  *          pointer to input buffer
  */
 
-void prompt (char *msg,char *txt)
+void prompt (char *msg,char *txt,int size)
 {
   printf ("%s",msg);
-  gets (txt);
+  fgets (txt,size,stdin);
+
+  int len = strlen (txt);
+  if (1 <= len)
+    *(txt + len - 1) = '\0';
 }
-
+
 /* Interfaces to C-client */
 
 
@@ -766,14 +772,14 @@ void smtptest (long debug)
   msg->return_path = mail_newaddr ();
   msg->return_path->mailbox = cpystr (curusr);
   msg->return_path->host = cpystr (curhst);
-  prompt ("To: ",line);
+  prompt ("To: ",line,MAILTMPLEN);
   rfc822_parse_adrlist (&msg->to,line,curhst);
   if (msg->to) {
-    prompt ("cc: ",line);
+    prompt ("cc: ",line,MAILTMPLEN);
     rfc822_parse_adrlist (&msg->cc,line,curhst);
   }
   else {
-    prompt ("Newsgroups: ",line);
+    prompt ("Newsgroups: ",line,MAILTMPLEN);
     if (*line) msg->newsgroups = cpystr (line);
     else {
       mail_free_body (&body);
@@ -782,12 +788,12 @@ void smtptest (long debug)
       return;
     }
   }
-  prompt ("Subject: ",line);
+  prompt ("Subject: ",line,MAILTMPLEN);
   msg->subject = cpystr (line);
   puts (" Msg (end with a line with only a '.'):");
   body->type = TYPETEXT;
   *text = '\0';
-  while (gets (line)) {
+  while (fgets (line,MAILTMPLEN,stdin)) {
     if (line[0] == '.') {
       if (line[1] == '\0') break;
       else strcat (text,".");
