@@ -40,6 +40,7 @@ Items marked with "*" are supported in this distribution:
    rfc5258.txt	LIST-EXTENDED
    rfc5819.txt	LIST-STATUS
  * rfc2088.txt	LITERAL+
+   rfc7888.txt  LITERAL-
  * rfc2221.txt	LOGIN-REFERRALS
  * rfc2193.txt	MAILBOX-REFERRALS
    rfc5464.txt	METADATA
@@ -57,7 +58,6 @@ Items marked with "*" are supported in this distribution:
    rfc5524.txt	URLAUTH=BINARY
    rfc5738.txt	UTF8 (EXPERIMENTAL)
  * rfc5032.txt	WITHIN
-   rfc7888.txt  LITERAL-
 
 
 The following documents describe SASL:
