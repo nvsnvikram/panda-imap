@@ -57,6 +57,7 @@ Items marked with "*" are supported in this distribution:
    rfc5524.txt	URLAUTH=BINARY
    rfc5738.txt	UTF8 (EXPERIMENTAL)
  * rfc5032.txt	WITHIN
+   rfc7888.txt  LITERAL-
 
 
 The following documents describe SASL:
