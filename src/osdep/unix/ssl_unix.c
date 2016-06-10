@@ -53,7 +53,7 @@
  * ports (e.g., 993 for IMAP, 995 for POP3) and using TLS exclusively.
  */
 
-#define SSLCIPHERLIST "ALL:!SSLv2:!ADH:!EXP:!LOW"
+#define SSLCIPHERLIST "ALL:!aNULL:!eNULL:!SSLv2:!SSLv3:!ADH:!EXP:!LOW:!MD5:!RC4:!3DES:!IDEA"
 
 /* SSL I/O stream */
 

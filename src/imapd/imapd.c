@@ -214,7 +214,7 @@ char *lasterror (void);
 
 /* Global storage */
 
-char *version = "417";		/* edit number of this server */
+char *version = "418";		/* edit number of this server */
 char *logout = "Logout";	/* syslogreason for logout */
 char *goodbye = NIL;		/* bye reason */
 time_t alerttime = 0;		/* time of last alert */
