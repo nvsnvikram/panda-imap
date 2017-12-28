@@ -41,12 +41,6 @@ typedef struct dotlock_base {
 #define SUBSCRIPTIONFILE(t) sprintf (t,"%s/.mailboxlist",myhomedir ())
 #define SUBSCRIPTIONTEMP(t) sprintf (t,"%s/.mlbxlsttmp",myhomedir ())
 
-
-/* dorc() options */
-
-#define SYSCONFIG "/etc/c-client.cf"
-
-
 /* Special users */
 
 #define ANONYMOUSUSER "nobody"	/* anonymous user */
@@ -78,7 +72,6 @@ long set_mbx_protections (char *mailbox,char *path);
 long get_dir_protection (char *mailbox);
 MAILSTREAM *user_flags (MAILSTREAM *stream);
 char *default_user_flag (unsigned long i);
-void dorc (char *file,long flag);
 long path_create (MAILSTREAM *stream,char *mailbox);
 void grim_pid_reap_status (int pid,int killreq,void *status);
 #define grim_pid_reap(pid,killreq) \
