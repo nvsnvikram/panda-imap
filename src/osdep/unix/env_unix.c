@@ -576,7 +576,6 @@ void server_init (char *server,char *service,char *sslservice,
     int mask;
     openlog (myServerName = cpystr (server),LOG_PID,syslog_facility);
     fclose (stderr);		/* possibly save a process ID */
-    dorc (NIL,NIL);		/* do systemwide configuration */
     switch (mask = umask (022)){/* check old umask */
     case 0:			/* definitely unreasonable */
     case 022:			/* don't need to change it */
@@ -814,12 +813,12 @@ long env_init (char *user,char *home)
   if (myUserName) fatal ("env_init called twice!");
 				/* initially nothing in namespace list */
   nslist[0] = nslist[1] = nslist[2] = NIL;
-				/* myUserName must be set before dorc() call */
+                                /* myUserName must be set before (removed) */
+                                /* dorc() call */
   myUserName = cpystr (user ? user : ANONYMOUSUSER);
 				/* force default prototypes to be set */
   if (!createProto) createProto = &CREATEPROTO;
   if (!appendProto) appendProto = &EMPTYPROTO;
-  dorc (NIL,NIL);		/* do systemwide configuration */
   if (!home) {			/* closed box server */
 				/* standard user can only reference home */
     if (user) nslist[0] = &nshome;
@@ -870,8 +869,7 @@ long env_init (char *user,char *home)
   }
 
   if (allowuserconfig) {	/* allow user config files */
-    dorc (strcat (strcpy (tmp,myHomeDir),"/.mminit"),T);
-    dorc (strcat (strcpy (tmp,myHomeDir),"/.imaprc"),NIL);
+       /* no-op */
   }
   if (!closedBox && !noautomaticsharedns) {
 				/* #ftp namespace */
@@ -1549,260 +1547,6 @@ char *default_user_flag (unsigned long i)
 {
   myusername ();		/* make sure initialized */
   return userFlags[i];
-}
-
-/* Process rc file
- * Accepts: file name
- *	    .mminit flag
- * Don't use this feature.
- */
-
-void dorc (char *file,long flag)
-{
-  int i;
-  char *s,*t,*k,*r,tmp[MAILTMPLEN],tmpx[MAILTMPLEN];
-  extern MAILSTREAM CREATEPROTO;
-  extern MAILSTREAM EMPTYPROTO;
-  DRIVER *d;
-  FILE *f;
-  if ((f = fopen (file ? file : SYSCONFIG,"r")) &&
-      (s = fgets (tmp,MAILTMPLEN,f)) && (t = strchr (s,'\n'))) do {
-    *t++ = '\0';		/* tie off line, find second space */
-    if ((k = strchr (s,' ')) && (k = strchr (++k,' '))) {
-      *k++ = '\0';		/* tie off two words */
-      if (!compare_cstring (s,"set keywords") && !userFlags[0]) {
-				/* yes, get first keyword */
-	k = strtok_r (k,", ",&r);
-				/* copy keyword list */
-	for (i = 0; k && i < NUSERFLAGS; ++i) if (strlen (k) <= MAXUSERFLAG) {
-	  if (userFlags[i]) fs_give ((void **) &userFlags[i]);
-	  userFlags[i] = cpystr (k);
-	  k = strtok_r (NIL,", ",&r);
-	}
-	if (flag) break;	/* found "set keywords" in .mminit */
-      }
-
-      else if (!flag) {		/* none of these valid in .mminit */
-	if (myUserName) {	/* only valid if logged in */
-	  if (!compare_cstring (s,"set new-mailbox-format") ||
-	      !compare_cstring (s,"set new-folder-format")) {
-	    if (!compare_cstring (k,"same-as-inbox")) {
-	      if (d = mail_valid (NIL,"INBOX",NIL)) {
-		if (!compare_cstring (d->name,"mbox"))
-		  d = (DRIVER *) mail_parameters (NIL,GET_DRIVER,
-						  (void *) "unix");
-		else if (!compare_cstring (d->name,"dummy")) d = NIL;
-	      }
-	      createProto = d ? ((*d->open) (NIL)) : &CREATEPROTO;
-	    }
-	    else if (!compare_cstring (k,"system-standard"))
-	      createProto = &CREATEPROTO;
-	    else {		/* canonicalize mbox to unix */
-	      if (!compare_cstring (k,"mbox")) k = "unix";
-				/* see if a driver name */
-	      if (d = (DRIVER *) mail_parameters (NIL,GET_DRIVER,(void *) k))
-		createProto = (*d->open) (NIL);
-	      else {		/* duh... */
-		sprintf (tmpx,"Unknown new mailbox format in %s: %s",
-			 file ? file : SYSCONFIG,k);
-		MM_LOG (tmpx,WARN);
-	      }
-	    }
-	  }
-	  if (!compare_cstring (s,"set empty-mailbox-format") ||
-	      !compare_cstring (s,"set empty-folder-format")) {
-	    if (!compare_cstring (k,"invalid")) appendProto = NIL;
-	    else if (!compare_cstring (k,"same-as-inbox"))
-	      appendProto = ((d = mail_valid (NIL,"INBOX",NIL)) &&
-			     compare_cstring (d->name,"dummy")) ?
-			       ((*d->open) (NIL)) : &EMPTYPROTO;
-	    else if (!compare_cstring (k,"system-standard"))
-	      appendProto = &EMPTYPROTO;
-	    else {		/* see if a driver name */
-	      for (d = (DRIVER *) mail_parameters (NIL,GET_DRIVERS,NIL);
-		   d && compare_cstring (d->name,k); d = d->next);
-	      if (d) appendProto = (*d->open) (NIL);
-	      else {		/* duh... */
-		sprintf (tmpx,"Unknown empty mailbox format in %s: %s",
-			 file ? file : SYSCONFIG,k);
-		MM_LOG (tmpx,WARN);
-	      }
-	    }
-	  }
-	}
-
-	if (!compare_cstring (s,"set local-host")) {
-	  fs_give ((void **) &myLocalHost);
-	  myLocalHost = cpystr (k);
-	}
-	else if (!compare_cstring (s,"set news-active-file")) {
-	  fs_give ((void **) &newsActive);
-	  newsActive = cpystr (k);
-	}
-	else if (!compare_cstring (s,"set news-spool-directory")) {
-	  fs_give ((void **) &newsSpool);
-	  newsSpool = cpystr (k);
-	}
-	else if (!compare_cstring (s,"set mh-path"))
-	  mail_parameters (NIL,SET_MHPATH,(void *) k);
-	else if (!compare_cstring (s,"set mh-allow-inbox"))
-	  mail_parameters (NIL,SET_MHALLOWINBOX,(void *) atol (k));
-	else if (!compare_cstring (s,"set news-state-file")) {
-	  fs_give ((void **) &myNewsrc);
-	  myNewsrc = cpystr (k);
-	}
-	else if (!compare_cstring (s,"set ftp-export-directory")) {
-	  fs_give ((void **) &ftpHome);
-	  ftpHome = cpystr (k);
-	}
-	else if (!compare_cstring (s,"set public-home-directory")) {
-	  fs_give ((void **) &publicHome);
-	  publicHome = cpystr (k);
-	}
-	else if (!compare_cstring (s,"set shared-home-directory")) {
-	  fs_give ((void **) &sharedHome);
-	  sharedHome = cpystr (k);
-	}
-	else if (!compare_cstring (s,"set system-inbox")) {
-	  fs_give ((void **) &sysInbox);
-	  sysInbox = cpystr (k);
-	}
-	else if (!compare_cstring (s,"set mail-subdirectory")) {
-	  fs_give ((void **) &mailsubdir);
-	  mailsubdir = cpystr (k);
-	}
-	else if (!compare_cstring (s,"set from-widget"))
-	  mail_parameters (NIL,SET_FROMWIDGET,
-			   compare_cstring (k,"header-only") ?
-			   VOIDT : NIL);
-
-	else if (!compare_cstring (s,"set rsh-command"))
-	  mail_parameters (NIL,SET_RSHCOMMAND,(void *) k);
-	else if (!compare_cstring (s,"set rsh-path"))
-	  mail_parameters (NIL,SET_RSHPATH,(void *) k);
-	else if (!compare_cstring (s,"set ssh-command"))
-	  mail_parameters (NIL,SET_SSHCOMMAND,(void *) k);
-	else if (!compare_cstring (s,"set ssh-path"))
-	  mail_parameters (NIL,SET_SSHPATH,(void *) k);
-	else if (!compare_cstring (s,"set tcp-open-timeout"))
-	  mail_parameters (NIL,SET_OPENTIMEOUT,(void *) atol (k));
-	else if (!compare_cstring (s,"set tcp-read-timeout"))
-	  mail_parameters (NIL,SET_READTIMEOUT,(void *) atol (k));
-	else if (!compare_cstring (s,"set tcp-write-timeout"))
-	  mail_parameters (NIL,SET_WRITETIMEOUT,(void *) atol (k));
-	else if (!compare_cstring (s,"set rsh-timeout"))
-	  mail_parameters (NIL,SET_RSHTIMEOUT,(void *) atol (k));
-	else if (!compare_cstring (s,"set ssh-timeout"))
-	  mail_parameters (NIL,SET_SSHTIMEOUT,(void *) atol (k));
-	else if (!compare_cstring (s,"set maximum-login-trials"))
-	  mail_parameters (NIL,SET_MAXLOGINTRIALS,(void *) atol (k));
-	else if (!compare_cstring (s,"set lookahead"))
-	  mail_parameters (NIL,SET_LOOKAHEAD,(void *) atol (k));
-	else if (!compare_cstring (s,"set prefetch"))
-	  mail_parameters (NIL,SET_PREFETCH,(void *) atol (k));
-	else if (!compare_cstring (s,"set close-on-error"))
-	  mail_parameters (NIL,SET_CLOSEONERROR,(void *) atol (k));
-	else if (!compare_cstring (s,"set imap-port"))
-	  mail_parameters (NIL,SET_IMAPPORT,(void *) atol (k));
-	else if (!compare_cstring (s,"set pop3-port"))
-	  mail_parameters (NIL,SET_POP3PORT,(void *) atol (k));
-	else if (!compare_cstring (s,"set uid-lookahead"))
-	  mail_parameters (NIL,SET_UIDLOOKAHEAD,(void *) atol (k));
-	else if (!compare_cstring (s,"set try-ssl-first"))
-	  mail_parameters (NIL,SET_TRYSSLFIRST,(void *) atol (k));
-
-	else if (!compare_cstring (s,"set mailbox-protection"))
-	  mbx_protection = atol (k);
-	else if (!compare_cstring (s,"set directory-protection"))
-	  dir_protection = atol (k);
-	else if (!compare_cstring (s,"set lock-protection"))
-	  dotlock_mode = atol (k);
-	else if (!compare_cstring (s,"set ftp-protection"))
-	  ftp_protection = atol (k);
-	else if (!compare_cstring (s,"set public-protection"))
-	  public_protection = atol (k);
-	else if (!compare_cstring (s,"set shared-protection"))
-	  shared_protection = atol (k);
-	else if (!compare_cstring (s,"set ftp-directory-protection"))
-	  ftp_dir_protection = atol (k);
-	else if (!compare_cstring (s,"set public-directory-protection"))
-	  public_dir_protection = atol (k);
-	else if (!compare_cstring (s,"set shared-directory-protection"))
-	  shared_dir_protection = atol (k);
-	else if (!compare_cstring (s,"set dot-lock-file-timeout"))
-	  locktimeout = atoi (k);
-	else if (!compare_cstring (s,"set disable-fcntl-locking"))
-	  fcntlhangbug = atoi (k);
-	else if (!compare_cstring (s,"set disable-lock-warning"))
-	  disableLockWarning = atoi (k);
-	else if (!compare_cstring (s,"set disable-unix-UIDs-and-keywords"))
-	  has_no_life = atoi (k);
-	else if (!compare_cstring (s,"set hide-dot-files"))
-	  hideDotFiles = atoi (k);
-	else if (!compare_cstring (s,"set list-maximum-level"))
-	  list_max_level = atol (k);
-	else if (!compare_cstring (s,"set trust-dns"))
-	  mail_parameters (NIL,SET_TRUSTDNS,(void *) atol (k));
-	else if (!compare_cstring (s,"set sasl-uses-ptr-name"))
-	  mail_parameters (NIL,SET_SASLUSESPTRNAME,(void *) atol (k));
-	else if (!compare_cstring (s,"set network-filesystem-stat-bug"))
-	  netfsstatbug = atoi (k);
-	else if (!compare_cstring (s,"set nntp-range"))
-	  mail_parameters (NIL,SET_NNTPRANGE,(void *) atol (k));
-
-	else if (!file) {	/* only allowed in system init */
-	  if (!compare_cstring (s,"set black-box-directory") &&
-	      !blackBoxDir) blackBoxDir = cpystr (k);
-	  else if (!compare_cstring(s,"set black-box-default-home-directory")&&
-		   blackBoxDir && !blackBoxDefaultHome)
-	    blackBoxDefaultHome = cpystr (k);
-	  else if (!compare_cstring (s,"set anonymous-home-directory") &&
-		   !anonymousHome) anonymousHome = cpystr (k);
-				/* It's tempting to allow setting the CA path
-				 * in a user init.  However, that opens up a
-				 * vector of attack big enough to drive a
-				 * truck through...  Resist the temptation.
-				 */
-	  else if (!compare_cstring (s,"set CA-certificate-path"))
-	    sslCApath = cpystr (k);
-	  else if (!compare_cstring (s,"set disable-plaintext"))
-	    disablePlaintext = atoi (k);
-	  else if (!compare_cstring (s,"set allowed-login-attempts"))
-	    logtry = atoi (k);
-	  else if (!compare_cstring (s,"set chroot-server"))
-	    closedBox = atoi (k);
-	  else if (!compare_cstring (s,"set restrict-mailbox-access"))
-	    for (k = strtok_r (k,", ",&r); k; k = strtok_r (NIL,", ",&r)) {
-	      if (!compare_cstring (k,"root")) restrictBox |= RESTRICTROOT;
-	      else if (!compare_cstring (k,"otherusers"))
-		restrictBox |= RESTRICTOTHERUSER;
-	      else if (!compare_cstring (k,"all")) restrictBox = -1;
-	    }
-	  else if (!compare_cstring (s,"set advertise-the-world"))
-	    advertisetheworld = atoi (k);
-	  else if (!compare_cstring (s,"set limited-advertise"))
-	    limitedadvertise = atoi (k);
-	  else if (!compare_cstring
-		   (s,"set disable-automatic-shared-namespaces"))
-	    noautomaticsharedns = atoi (k);
-	  else if (!compare_cstring (s,"set allow-user-config"))
-	    allowuserconfig = atoi (k);
-	  else if (!compare_cstring (s,"set allow-reverse-dns"))
-	    mail_parameters (NIL,SET_ALLOWREVERSEDNS,(void *) atol (k));
-	  else if (!compare_cstring (s,"set k5-cp-uses-service-name"))
-	    kerb_cp_svr_name = atoi (k);
-				/* must appear in file after any
-				 * "set disable-plaintext" command! */
-	  else if (!compare_cstring (s,"set plaintext-allowed-clients")) {
-	    for (k = strtok_r (k,", ",&r); k && !tcp_isclienthost (k);
-		 k = strtok_r (NIL,", ",&r));
-	    if (k) disablePlaintext = 0;
-	  }
-	}
-      }
-    }
-  } while ((s = fgets (tmp,MAILTMPLEN,f)) && (t = strchr (s,'\n')));
-  if (f) fclose (f);		/* flush the file */
 }
 
 /* INBOX create function for tmail/dmail use only
