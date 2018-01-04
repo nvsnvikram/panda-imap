@@ -59,8 +59,8 @@ GCC4CFLAGS= $(GCCCFLAGS) -Wno-pointer-sign
 SSLDIR=/usr
 SSLCERTS=/etc/ssl/certs
 SSLKEYS=/etc/ssl/private
-SSLINCLUDE=$(SSLDIR)/include
-SSLLIB=$(SSLDIR)/lib
+SSLINCLUDE=$(SSLDIR)/include/openssl-1.0
+SSLLIB=$(SSLDIR)/lib/openssl-1.0
 
 SSLCRYPTO=-lcrypto
 
