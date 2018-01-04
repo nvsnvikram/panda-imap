@@ -25,7 +25,7 @@
 
 /* The Version */
 
-#define CCLIENTVERSION "2016"
+#define CCLIENTVERSION "2018"
 
 /* Build parameters */
 
