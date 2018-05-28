@@ -23,6 +23,13 @@
  *
  */
 
+
+#include <stdio.h>
+#include <unistd.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <time.h>
+#include "tcp.h"
 #include "ip4_unix.c"
 
 #undef write			/* don't use redefined write() */

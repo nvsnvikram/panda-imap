@@ -25,6 +25,18 @@
  * ========================================================================
  */
 
+#include <string.h>
+#include <netdb.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include "fs.h"
+#include "mail.h"
+#include "misc.h"
+
+#define NIL 0
 
 #define SADRLEN sizeof (struct sockaddr)
 

@@ -1,3 +1,6 @@
+#ifndef _ENV_UNIX_H_
+#define _ENV_UNIX_H_
+
 /* ========================================================================
  * Copyright 2008-2010 Mark Crispin
  * ========================================================================
@@ -83,3 +86,5 @@ long loginpw (struct passwd *pw,int argc,char *argv[]);
 long pw_login (struct passwd *pw,char *auser,char *user,char *home,int argc,
 	       char *argv[]);
 void *mm_blocknotify (int reason,void *data);
+
+#endif /* #ifndef _ENV_UNIX_H_ */

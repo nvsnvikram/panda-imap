@@ -23,10 +23,45 @@
  *
  */
 
+#include <stdio.h>
+#include <netdb.h>
+#include <ctype.h>
+#include <errno.h>
+#include <time.h>
+#include <string.h>
+#include <pwd.h>
+#include <shadow.h>
 #include <grp.h>
 #include <signal.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/time.h>
+#include <sys/stat.h>
+#include <sys/socket.h>
 #include <sys/wait.h>
+#include <sys/syslog.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include "fs.h"
+#include "ftl.h"
+#include "tcp.h"
 #include "mail.h"
+#include "misc.h"
+#include "env_unix.h"
+
+/* Linux gets this wrong */
+
+#define setpgrp setpgid
+
+#define direct dirent
+
+#define flock safe_flock
+int safe_flock (int fd,int op);
+
+#define utime portable_utime
+int portable_utime (char *file,time_t timep[2]);
 
 /* in case stat.h is ancient */
 

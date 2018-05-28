@@ -26,6 +26,7 @@
  * Last Edited:	31 January 2007
  */
 
+#include "mail.h"
 
 /* Dummy definition overridden by TCP routines */
 
