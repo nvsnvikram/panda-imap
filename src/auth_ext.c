@@ -26,6 +26,12 @@
  * Last Edited:	30 August 2006
  */
 
+#include <string.h>
+#include <sys/types.h>
+#include "mail.h"
+#include "env_unix.h"
+#include "fs.h"
+
 long auth_external_client (authchallenge_t challenger,authrespond_t responder,
 			  char *service,NETMBX *mb,void *stream,
 			  unsigned long *trial,char *user);

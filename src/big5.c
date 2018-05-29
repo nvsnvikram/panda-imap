@@ -25,7 +25,9 @@
  * Date:	3 July 1997
  * Last Edited:	30 August 2006
  */
-
+
+#include "utf8.h"
+
 /* Big-5 is the de-facto industrial standard of the Republic of China
  * (Taiwan), and is commonly used in the Hong Kong Special Administrative
  * Region of the People's Republic of China (mainland China).

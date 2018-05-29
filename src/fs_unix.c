@@ -31,6 +31,11 @@
  * Returns: free storage block
  */
 
+#include <stdlib.h>
+#include <unistd.h>
+#include "mail.h"
+#include "ftl.h"
+
 void *fs_get (size_t size)
 {
   blocknotify_t bn = (blocknotify_t) mail_parameters (NIL,GET_BLOCKNOTIFY,NIL);

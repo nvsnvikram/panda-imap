@@ -37,6 +37,19 @@
  * Return: T if success, NIL if failed, -1 if retry
  */
 
+#include <unistd.h>
+#include <time.h>
+#include <string.h>
+#include <errno.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include "mail.h"
+
+extern const int shlock_mode;
+
+
 long crexcl (char *name)
 {
   long ret = -1;

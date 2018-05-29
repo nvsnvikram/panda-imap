@@ -36,7 +36,10 @@
  * some NFS-mounted filesystem will do.
  */
 
-#undef write
+
+#include <unistd.h>
+#include <errno.h>
+#include "misc.h"
 
 /* Write data to file
  * Accepts: file descriptor

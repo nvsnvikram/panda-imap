@@ -27,13 +27,7 @@
  */
 
 #include "mail.h"
-
-/* Dummy definition overridden by TCP routines */
-
-#ifndef TCPSTREAM
-#define TCPSTREAM void
-#endif
-
+#include "tcp_unix.h"
 
 /* Function prototypes */
 

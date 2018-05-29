@@ -25,7 +25,9 @@
  * Date:	3 July 1997
  * Last Edited:	30 August 2006
  */
-
+
+#include "utf8.h"
+
 /* CNS 11643 is the national standard of the Republic of China (Taiwan).
  * Thanks to Emily Hsu of the ROC's Institute for Information Industry for
  * this data.

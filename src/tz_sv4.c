@@ -31,6 +31,10 @@
  * Accepts: destination string
  */
 
+#include <time.h>
+#include <string.h>
+#include <stdio.h>
+
 void rfc822_timezone (char *s,void *t)
 {
   tzset ();			/* get timezone from TZ environment stuff */

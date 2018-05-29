@@ -25,7 +25,9 @@
  * Date:	3 July 1997
  * Last Edited:	30 August 2006
  */
-
+
+#include "utf8.h"
+
 /* JIS X0208 is the industrial standard of Japan. */
 
 #define BASE_JIS0208_KU 0x21

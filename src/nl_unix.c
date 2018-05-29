@@ -34,6 +34,10 @@
  * Returns: length of copied string
  */
 
+#include <stdlib.h>
+#include "fs.h"
+#include "mail.h"
+
 unsigned long strcrlfcpy (unsigned char **dst,unsigned long *dstl,
 			  unsigned char *src,unsigned long srcl)
 {

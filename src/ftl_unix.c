@@ -31,6 +31,10 @@
  * Accepts: string to output
  */
 
+#include <stdlib.h>
+#include <syslog.h>
+#include "mail.h"
+
 void fatal (char *string)
 {
   MM_FATAL (string);		/* pass up the string */

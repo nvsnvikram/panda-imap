@@ -1,3 +1,6 @@
+#ifndef _MISC_H_
+#define _MISC_H_
+
 /* ========================================================================
  * Copyright 2008 Mark Crispin
  * ========================================================================
@@ -30,6 +33,8 @@
  */
 
 /* Hash table operations */
+
+#include "mail.h"
 
 #define HASHMULT 29		/* hash polynomial multiplier */
 
@@ -105,3 +110,5 @@ int compare_uchar (unsigned char c1,unsigned char c2);
 int compare_string (unsigned char *s1,unsigned char *s2);
 int compare_cstring (unsigned char *s1,unsigned char *s2);
 int compare_csizedtext (unsigned char *s1,SIZEDTEXT *s2);
+
+#endif /* #ifndef _MISC_H_ */

@@ -22,7 +22,17 @@
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  */
- 
+
+
+#include <errno.h>
+#include <stdio.h>
+#include <string.h>
+#include <syslog.h>
+#include <unistd.h>
+#include <sys/file.h>
+#include "mail.h"
+#include "ftl.h"
+
 #undef flock
 
 #include <sys/vfs.h>

@@ -25,7 +25,12 @@
  * Date:	22 September 1998
  * Last Edited:	30 August 2006
  */
-
+
+#include <string.h>
+#include <sys/types.h>
+#include "fs.h"
+#include "mail.h"
+
 long auth_plain_client (authchallenge_t challenger,authrespond_t responder,
 			char *service,NETMBX *mb,void *stream,
 			unsigned long *trial,char *user);

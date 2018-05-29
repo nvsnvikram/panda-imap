@@ -25,7 +25,13 @@
  * Date:	5 December 1995
  * Last Edited:	30 August 2006
  */
-
+
+#include <string.h>
+#include <sys/types.h>
+#include "mail.h"
+#include "fs.h"
+#include "env_unix.h"
+
 long auth_login_client (authchallenge_t challenger,authrespond_t responder,
 			char *service,NETMBX *mb,void *stream,
 			unsigned long *trial,char *user);

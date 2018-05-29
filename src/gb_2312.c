@@ -25,7 +25,9 @@
  * Date:	3 July 1997
  * Last Edited:	30 August 2006
  */
-
+
+#include "utf8.h"
+
 /* GB 2312 is the national standard of the People's Republic of China
  * (mainland China).  This is actually the GBK extended version.
  */

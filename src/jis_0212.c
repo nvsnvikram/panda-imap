@@ -25,7 +25,9 @@
  * Date:	4 August 1997
  * Last Edited:	30 August 2006
  */
-
+
+#include "utf8.h"
+
 /* JIS X0212 is the supplemental industrial standard of Japan. */
 
 #define BASE_JIS0212_KU 0x22

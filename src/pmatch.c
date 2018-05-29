@@ -33,6 +33,11 @@
  * Returns: T if pattern matches base, else NIL
  */
 
+#include <string.h>
+
+#define NIL 0
+#define T   1
+
 long pmatch_full (unsigned char *s,unsigned char *pat,unsigned char delim)
 {
   switch (*pat) {

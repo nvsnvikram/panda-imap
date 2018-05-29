@@ -25,7 +25,9 @@
  * Date:	15 May 1998
  * Last Edited:	30 August 2006
  */
-
+
+#include "utf8.h"
+
 /* GB 12345 is the national standard of the People's Republic of China
  * (mainland China) for traditional Chinese characters.
  */

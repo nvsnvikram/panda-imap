@@ -25,7 +25,9 @@
  * Date:	3 July 1997
  * Last Edited:	30 August 2006
  */
-
+
+#include "utf8.h"
+
 /* ISO-8859 conversion tables */
 
 				/* Latin-2 (East European) */

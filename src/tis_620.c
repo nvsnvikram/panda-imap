@@ -25,7 +25,9 @@
  * Date:	24 October 1997
  * Last Edited:	30 August 2006
  */
-
+
+#include "utf8.h"
+
 /* TIS 620-2529 is the "Thai Industrial Standard for Thai Character Code
  * for Computer", published by the Thai Industrial Standards Institute,
  * Ministry of Industry of Thailand.

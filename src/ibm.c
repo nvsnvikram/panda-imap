@@ -25,7 +25,9 @@
  * Date:	4 November 2002
  * Last Edited:	30 August 2006
  */
-
+
+#include "utf8.h"
+
 				/* IBM Latin US */
 static const unsigned short ibm_437tab[128] = {
   0x00c7,0x00fc,0x00e9,0x00e2,0x00e4,0x00e0,0x00e5,0x00e7,

@@ -25,8 +25,11 @@
  * Date:	10 October 1996
  * Last Edited:	30 August 2006
  */
-
-#undef utime
+
+#include <utime.h>
+#include <string.h>
+#include <time.h>
+#include <sys/types.h>
 
 /* Portable utime() that takes it args like real Unix systems
  * Accepts: file path

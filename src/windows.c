@@ -25,7 +25,9 @@
  * Date:	16 October 2000
  * Last Edited:	30 August 2006
  */
-
+
+#include "utf8.h"
+
 				/* Windows Thai */
 static const unsigned short windows_874tab[128] = {
   0x20ac,UBOGON,UBOGON,UBOGON,UBOGON,0x2026,UBOGON,UBOGON,

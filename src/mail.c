@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "c-client.h"
+#include "mail.h"
 
 char *Panda_copyright = "Copyright 2008-2010 Mark Crispin\n";
 

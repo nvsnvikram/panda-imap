@@ -1178,21 +1178,23 @@ typedef struct net_stream {
   NETDRIVER *dtb;		/* network driver */
 } NETSTREAM;
 
+struct tcp_stream; /* forward declaration */
+#define TCPSTREAM struct tcp_stream
 
 /* Network transport driver dispatch */
 
 NETDRIVER {
-  void *(*open) (char *host,char *service,unsigned long port);
-  void *(*aopen) (NETMBX *mb,char *service,char *usrbuf);
-  char *(*getline) (void *stream);
-  long (*getbuffer) (void *stream,unsigned long size,char *buffer);
-  long (*soutr) (void *stream,char *string);
-  long (*sout) (void *stream,char *string,unsigned long size);
-  void (*close) (void *stream);
-  char *(*host) (void *stream);
-  char *(*remotehost) (void *stream);
-  unsigned long (*port) (void *stream);
-  char *(*localhost) (void *stream);
+  TCPSTREAM *(*open) (char *host,char *service,unsigned long port);
+  TCPSTREAM *(*aopen) (NETMBX *mb,char *service,char *usrbuf);
+  char *(*getline) (TCPSTREAM *stream);
+  long (*getbuffer) (TCPSTREAM *stream,unsigned long size,char *buffer);
+  long (*soutr) (TCPSTREAM *stream,char *string);
+  long (*sout) (TCPSTREAM *stream,char *string,unsigned long size);
+  void (*close) (TCPSTREAM *stream);
+  char *(*host) (TCPSTREAM *stream);
+  char *(*remotehost) (TCPSTREAM *stream);
+  unsigned long (*port) (TCPSTREAM *stream);
+  char *(*localhost) (TCPSTREAM *stream);
 };
 
 

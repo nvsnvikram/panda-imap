@@ -22,7 +22,17 @@
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  */
-
+
+#include <stdio.h>
+#include <unistd.h>
+#include <time.h>
+#include <fcntl.h>
+#include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include "misc.h"
+#include "fs.h"
+
 /* MD5 context */
 
 #define MD5BLKLEN 64		/* MD5 block length */

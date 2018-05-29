@@ -34,6 +34,9 @@
  * Returns: 0 if success, -1 if error
  */
 
+#include <stdlib.h>
+#include <sys/socket.h>
+
 int Getpeername (int s,struct sockaddr *name,size_t *namelen)
 {
   int ret;

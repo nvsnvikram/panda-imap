@@ -1,3 +1,6 @@
+#ifndef _UTF8_H_
+#define _UTF8_H_
+
 /* ========================================================================
  * Copyright 1988-2008 University of Washington
  *
@@ -25,7 +28,9 @@
  * Date:	11 June 1997
  * Last Edited:	17 January 2008
  */
-
+
+#include "mail.h"
+
 /* UTF-8 size and conversion routines from UCS-2 values (thus in the BMP).
  * Don't use these if UTF-16 data (surrogate pairs) are an issue.
  * For UCS-4 values, use the utf8_size() and utf8_put() functions.
@@ -582,3 +587,5 @@ long utf8_strwidth (unsigned char *s);
 long utf8_textwidth (SIZEDTEXT *utf8);
 unsigned long ucs4_decompose (unsigned long c,void **more);
 unsigned long ucs4_decompose_recursive (unsigned long c,void **more);
+
+#endif /* #ifndef _UTF8_H_ */

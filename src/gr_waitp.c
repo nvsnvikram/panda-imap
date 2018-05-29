@@ -32,6 +32,13 @@
  *	    status return value
  */
 
+#include <signal.h>
+#include <wait.h>
+#include <errno.h>
+#include <sys/types.h>
+
+#define NIL 0
+
 void grim_pid_reap_status (int pid,int killreq,void *status)
 {
   if (killreq) kill(pid,SIGHUP);/* kill if not already dead */
