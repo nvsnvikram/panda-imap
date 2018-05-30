@@ -30,6 +30,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include "env_unix.h"
 #include "misc.h"
 #include "fs.h"
 

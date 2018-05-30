@@ -28,15 +28,13 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <errno.h>
-extern int errno;		/* just in case */
 #include <signal.h>
 #include <setjmp.h>
 #include <time.h>
 #include <limits.h>
+#include <sys/stat.h>
 #include "c-client.h"
 #include "newsrc.h"
-#include <sys/stat.h>
-
 
 #define CRLF PSOUT ("\015\012")	/* primary output terpri */
 

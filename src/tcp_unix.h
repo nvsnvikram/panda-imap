@@ -31,7 +31,6 @@
 
 #define BUFLEN 8192
 
-
 /* TCP I/O stream */
 
 #define TCPSTREAM struct tcp_stream
@@ -46,3 +45,15 @@ TCPSTREAM {
   char *iptr;			/* input pointer */
   char ibuf[BUFLEN];		/* input buffer */
 };
+
+char *tcp_serveraddr();
+long tcp_serverport();
+char *tcp_clientaddr();
+long tcp_clientport();
+char *tcp_clienthost();
+TCPSTREAM *tcp_open (char *host,char *service,unsigned long port);
+void tcp_close(TCPSTREAM *stream);
+char *tcp_host(TCPSTREAM *stream);
+char *tcp_remotehost(TCPSTREAM *stream);
+unsigned long tcp_port(TCPSTREAM *stream);
+char *tcp_localhost(TCPSTREAM *stream);

@@ -1,12 +1,11 @@
 bin_PROGRAMS = imapd
 imapd_SOURCES = imapd.c imap4r1.c mail.c netmsg.c env_unix.c rfc822.c smtp.c \
 	nntp.c utf8.c newsrc.c tcp_unix.c fs_unix.c ftl_unix.c nl_unix.c \
-	getspnam.c gr_waitp.c tz_sv4.c flocklnx.c utime.c write.c crx_nfs.c \
-	pmatch.c auths.c auth_ext.c auth_md5.c auth_pla.c auth_log.c \
-	ip4_unix.c flstring.c iso_8859.c widths.c tmap.c decomtab.c koi8_r.c \
-	koi8_u.c tis_620.c viscii.c windows.c ibm.c gb_2312.c gb_12345.c \
-	jis_0208.c jis_0212.c ksc_5601.c big5.c cns11643.c
-
+	getspnam.c gr_waitp.c tz_sv4.c flocklnx.c utime.c ssl_unix.c misc.c \
+	flstring.c iso_8859.c  widths.c tmap.c decomtab.c koi8_r.c koi8_u.c \
+	tis_620.c viscii.c windows.c ibm.c gb_2312.c gb_12345.c jis_0208.c \
+	jis_0212.c ksc_5601.c big5.c cns11643.c unix.c pseudo.c fdstring.c \
+	dummy.c
 imapd_CFLAGS = -DANOFILE=\"/etc/anonymous.newsgroups\" \
 	-DALERTFILE=\"/etc/imapd.alert\" \
 	-DNNTPFILE=\"/etc/imapd.nntp\" \
@@ -20,4 +19,8 @@ imapd_CFLAGS = -DANOFILE=\"/etc/anonymous.newsgroups\" \
 	-DLOCKPGM1=\"/usr/libexec/mlock\" \
 	-DLOCKPGM2=\"/usr/sbin/mlock\" \
 	-DLOCKPGM3=\"/etc/mlock\" \
-	-DLOCKPGM=\"\" $(AM_CFLAGS)
+	-DLOCKPGM=\"\" \
+	-DSSL_CERT_DIRECTORY=\"/etc/ssl/certs\" \
+	-DSSL_KEY_DIRECTORY=\"/etc/ssl/private\" \
+	-I/usr/include/openssl $(AM_CFLAGS)
+imapd_LDFLAGS = -lssl -lcrypto

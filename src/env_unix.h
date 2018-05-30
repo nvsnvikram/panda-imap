@@ -26,6 +26,7 @@
  *
  */
 
+#include "mail.h"
 
 typedef struct dotlock_base {
   char lock[MAILTMPLEN];
@@ -89,5 +90,6 @@ void *mm_blocknotify (int reason,void *data);
 long authserver_login (char *user,char *authuser,int argc,char *argv[]);
 char *mylocalhost ();
 long server_login (char *user,char *pwd,char *authuser,int argc,char *argv[]);
+long server_input_wait(long seconds);
 
 #endif /* #ifndef _ENV_UNIX_H_ */
