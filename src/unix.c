@@ -48,6 +48,7 @@
 #include <utime.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/file.h>
 #include "unix.h"
 #include "pseudo.h"
 #include "fdstring.h"

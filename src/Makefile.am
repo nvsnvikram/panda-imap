@@ -22,5 +22,7 @@ imapd_CFLAGS = -DANOFILE=\"/etc/anonymous.newsgroups\" \
 	-DLOCKPGM=\"\" \
 	-DSSL_CERT_DIRECTORY=\"/etc/ssl/certs\" \
 	-DSSL_KEY_DIRECTORY=\"/etc/ssl/private\" \
-	-I/usr/include/openssl $(AM_CFLAGS)
+	-I/usr/include/openssl  \
+	-DCHUNKSIZE=65536 \
+	$(AM_CFLAGS)
 imapd_LDFLAGS = -lssl -lcrypto
