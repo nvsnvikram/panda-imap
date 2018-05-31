@@ -25,7 +25,9 @@
  * Date:	9 May 1991
  * Last Edited:	30 August 2006
  */
-
+
+#include "mail.h"
+
 /* Exported function prototypes */
 
 void dummy_scan (MAILSTREAM *stream,char *ref,char *pat,char *contents);

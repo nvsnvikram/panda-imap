@@ -42,10 +42,12 @@
 #include <errno.h>
 #include <signal.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <time.h>
 #include <fcntl.h>
 #include <string.h>
 #include <utime.h>
+#include <syslog.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/file.h>
@@ -56,8 +58,10 @@
 #include "dummy.h"
 #include "env_unix.h"
 #include "mail.h"
+#include "tcp_unix.h"
 #include "ftl.h"
 #include "fs.h"
+#include "nl.h"
 
 /* UNIX I/O stream local data */
 
@@ -1028,14 +1032,14 @@ long unix_copy (MAILSTREAM *stream,char *sequence,char *mailbox,long options)
  * Returns: T if append successful, else NIL
  */
 
-#define BUFLEN 8*MAILTMPLEN
+#define UBUFLEN 8*MAILTMPLEN
 
 long unix_append (MAILSTREAM *stream,char *mailbox,append_t af,void *data)
 {
   struct stat sbuf;
   int fd;
   unsigned long i;
-  char *flags,*date,buf[BUFLEN],tmp[MAILTMPLEN],file[MAILTMPLEN];
+  char *flags,*date,buf[UBUFLEN],tmp[MAILTMPLEN],file[MAILTMPLEN];
   time_t tp[2];
   FILE *sf,*df;
   MESSAGECACHE elt;

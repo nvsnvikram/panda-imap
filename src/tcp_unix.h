@@ -1,3 +1,6 @@
+#ifndef _TCP_UNIX_
+#define _TCP_UNIX_
+
 /* ========================================================================
  * Copyright 1988-2006 University of Washington
  *
@@ -57,3 +60,5 @@ char *tcp_host(TCPSTREAM *stream);
 char *tcp_remotehost(TCPSTREAM *stream);
 unsigned long tcp_port(TCPSTREAM *stream);
 char *tcp_localhost(TCPSTREAM *stream);
+
+#endif /* #ifndef _TCP_UNIX_ */

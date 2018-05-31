@@ -26,8 +26,9 @@
  * Last Edited:	4 April 2007
  */
 
+#include <unistd.h>
+#include <sys/types.h>
 #include "mail.h"
-#include "osdep.h"
 #include "misc.h"
 #include "fdstring.h"
 

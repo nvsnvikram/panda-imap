@@ -23,18 +23,23 @@
  *
  */
 
-
+#include <time.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <errno.h>
-extern int errno;		/* just in case */
-#include "mail.h"
-#include "osdep.h"
+#include <string.h>
+#include <fcntl.h>
 #include <pwd.h>
 #include <sys/stat.h>
+#include <sys/stat.h>
 #include "dummy.h"
+#include "opendir.h"
+#include "fs.h"
+#include "ftl.h"
 #include "misc.h"
-
+#include "env_unix.h"
+
 /* Function prototypes */
 
 DRIVER *dummy_valid (char *name);
