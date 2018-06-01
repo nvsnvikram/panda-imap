@@ -12,7 +12,7 @@
  */
 
 /*
- * Program:	BSD utime() emulator
+ * Program:	POSIX Signals
  *
  * Author:	Mark Crispin
  *		Networks and Distributed Computing
@@ -22,27 +22,30 @@
  *		Seattle, WA  98195
  *		Internet: MRC@CAC.Washington.EDU
  *
- * Date:	10 October 1996
+ * Date:	29 April 1997
  * Last Edited:	30 August 2006
  */
-
-#include <utime.h>
+ 
+#include <signal.h>
 #include <string.h>
-#include <time.h>
-#include <sys/types.h>
 
-/* Portable utime() that takes it args like real Unix systems
- * Accepts: file path
- *	    traditional utime() argument
- * Returns: utime() results
+#ifndef SA_RESTART
+#define SA_RESTART 0
+#endif
+
+/* Arm a signal
+ * Accepts: signal number
+ *	    desired action
+ * Returns: old action
  */
 
-int portable_utime (char *file,time_t timep[2])
+void *arm_signal (int sig,void *action)
 {
-  struct utimbuf times;
-				/* in case there's other cruft there */
-  memset (&times,0,sizeof (struct utimbuf));
-  times.actime = timep[0];	/* copy the portable values */
-  times.modtime = timep[1];
-  return utime (file,&times);	/* now call the SVR4 routine */
+  struct sigaction nact,oact;
+  memset (&nact,0,sizeof (struct sigaction));
+  sigemptyset (&nact.sa_mask);	/* no signals blocked */
+  nact.sa_handler = action;	/* set signal handler */
+  nact.sa_flags = SA_RESTART;	/* needed on Linux, nice on SVR4 */
+  sigaction (sig,&nact,&oact);	/* do the signal action */
+  return (void *) oact.sa_handler;
 }

@@ -46,7 +46,6 @@
 #include <time.h>
 #include <fcntl.h>
 #include <string.h>
-#include <utime.h>
 #include <syslog.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -59,6 +58,7 @@
 #include "env_unix.h"
 #include "mail.h"
 #include "tcp_unix.h"
+#include "bsdutime.h"
 #include "ftl.h"
 #include "fs.h"
 #include "nl.h"
@@ -239,7 +239,7 @@ DRIVER *unix_valid (char *name)
       if ((sbuf.st_ctime > sbuf.st_atime) || (sbuf.st_mtime > sbuf.st_atime)) {
 	tp[0] = sbuf.st_atime;	/* yes, preserve atime and mtime */
 	tp[1] = sbuf.st_mtime;
-	utime (file,tp);	/* set the times */
+	bsd_utime (file,tp);	/* set the times */
       }
     }
   }
@@ -1006,7 +1006,7 @@ long unix_copy (MAILSTREAM *stream,char *sequence,char *mailbox,long options)
   else tp[0] =			/* else preserve \Marked status */
 	 ((sbuf.st_ctime > sbuf.st_atime) || (sbuf.st_mtime > sbuf.st_atime)) ?
 	 sbuf.st_atime : tp[1];
-  utime (file,tp);		/* set the times */
+  bsd_utime (file,tp);		/* set the times */
   unix_unlock (fd,NIL,&lock);	/* unlock and close mailbox */
   if (tstream) {		/* update last UID if we can */
     UNIXLOCAL *local = (UNIXLOCAL *) tstream->local;
@@ -1167,7 +1167,7 @@ long unix_append (MAILSTREAM *stream,char *mailbox,append_t af,void *data)
     ret = NIL;			/* return error */
   }
   else tp[0] = tp[1] - 1;	/* set atime to now-1 if successful copy */
-  utime (file,tp);		/* set the times */
+  bsd_utime (file,tp);		/* set the times */
   fclose (sf);			/* done with scratch file */
 				/* force UIDVALIDITY assignment now */
   if (tstream && !tstream->uid_validity) tstream->uid_validity = time (0);
@@ -1432,7 +1432,7 @@ void unix_unlock (int fd,MAILSTREAM *stream,DOTLOCK *lock)
     }
     else now = 0;		/* no time change needed */
 				/* set the times, note change */
-    if (now && !utime (stream->mailbox,tp)) LOCAL->filetime = tp[1];
+    if (now && !bsd_utime (stream->mailbox,tp)) LOCAL->filetime = tp[1];
   }
   flock (fd,LOCK_UN);		/* release flock'ers */
   if (!stream) close (fd);	/* close the file if no stream */
@@ -2258,7 +2258,7 @@ long unix_rewrite (MAILSTREAM *stream,unsigned long *nexp,DOTLOCK *lock,
 				/* set atime to now, mtime a second earlier */
     tp[1] = (tp[0] = time (0)) - 1;
 				/* set the times, note change */
-    if (!utime (stream->mailbox,tp)) LOCAL->filetime = tp[1];
+    if (!bsd_utime (stream->mailbox,tp)) LOCAL->filetime = tp[1];
     close (LOCAL->fd);		/* close and reopen file */
     if ((LOCAL->fd = open (stream->mailbox,O_RDWR,
 			   (long) mail_parameters (NIL,GET_MBXPROTECTION,NIL)))

@@ -282,7 +282,7 @@ void dummy_list_work (MAILSTREAM *stream,char *dir,char *pat,char *contents,
   size_t len = 0;
 				/* punt if bogus name */
   if (!mailboxdir (tmp,dir,NIL)) return;
-  if (dp = opendir (tmp)) {	/* do nothing if can't open directory */
+  if (dp = bsd_opendir (tmp)) {	/* do nothing if can't open directory */
 				/* see if a non-namespace directory format */
     for (drivers = (DRIVER *) mail_parameters (NIL,GET_DRIVERS,NIL), dt = NIL;
 	 dir && !dt && drivers; drivers = drivers->next)
@@ -294,7 +294,7 @@ void dummy_list_work (MAILSTREAM *stream,char *dir,char *pat,char *contents,
       dummy_listed (stream,'/',dir,dt ? NIL : LATT_NOSELECT,contents);
 
 				/* scan directory, ignore . and .. */
-    if (!dir || dir[(len = strlen (dir)) - 1] == '/') while (d = readdir (dp))
+    if (!dir || dir[(len = strlen (dir)) - 1] == '/') while (d = bsd_readdir (dp))
       if ((!(dt && (*dt) (d->d_name))) &&
 	  ((d->d_name[0] != '.') ||
 	   (((long) mail_parameters (NIL,GET_HIDEDOTFILES,NIL)) ? NIL :
@@ -339,7 +339,7 @@ void dummy_list_work (MAILSTREAM *stream,char *dir,char *pat,char *contents,
 	  }
 	}
       }
-    closedir (dp);		/* all done, flush directory */
+    bsd_closedir (dp);		/* all done, flush directory */
   }
 }
 
@@ -417,7 +417,7 @@ long dummy_listed (MAILSTREAM *stream,char delimiter,char *name,
   int nochild;
   char *s,tmp[MAILTMPLEN];
   if (!(attributes & LATT_NOINFERIORS) && mailboxdir (tmp,name,NIL) &&
-      (dp = opendir (tmp))) {	/* if not \NoInferiors */
+      (dp = bsd_opendir (tmp))) {	/* if not \NoInferiors */
 				/* locate dirfmttest if any */
     for (d = (DRIVER *) mail_parameters (NIL,GET_DRIVERS,NIL), dt = NIL;
 	 !dt && d; d = d->next)
@@ -425,14 +425,14 @@ long dummy_listed (MAILSTREAM *stream,char delimiter,char *name,
 	  (*d->valid) (name))
 	dt = mail_parameters ((*d->open) (NIL),GET_DIRFMTTEST,NIL);
 				/* scan directory for children */
-    for (nochild = T; nochild && (dr = readdir (dp)); )
+    for (nochild = T; nochild && (dr = bsd_readdir (dp)); )
       if ((!(dt && (*dt) (dr->d_name))) &&
 	  ((dr->d_name[0] != '.') ||
 	   (((long) mail_parameters (NIL,GET_HIDEDOTFILES,NIL)) ? NIL :
 	    (dr->d_name[1] && ((dr->d_name[1] != '.') || dr->d_name[2])))))
 	nochild = NIL;
     attributes |= nochild ? LATT_HASNOCHILDREN : LATT_HASCHILDREN;
-    closedir (dp);		/* all done, flush directory */
+    bsd_closedir (dp);		/* all done, flush directory */
   }
   d = NIL;			/* don't \NoSelect dir if it has a driver */
   if ((attributes & LATT_NOSELECT) && (d = mail_valid (NIL,name,NIL)) &&

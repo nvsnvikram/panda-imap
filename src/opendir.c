@@ -25,13 +25,22 @@
  * Date:	16 December 1993
  * Last Edited:	30 August 2006
  */
-
+
+#include <unistd.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include "opendir.h"
+#include "fs.h"
+
+#define NIL 0
 /* Emulator for BSD opendir() call
  * Accepts: directory name
  * Returns: directory structure pointer
  */
 
-DIR *opendir (char *name)
+DIR *bsd_opendir (char *name)
 {
   DIR *d = NIL;
   struct stat sbuf;
@@ -54,7 +63,7 @@ DIR *opendir (char *name)
  * Accepts: directory structure pointer
  */
 
-int closedir (DIR *d)
+int bsd_closedir (DIR *d)
 {
 				/* free storage */
   fs_give ((void **) &(d->dd_buf));
@@ -67,7 +76,7 @@ int closedir (DIR *d)
  * Accepts: directory structure pointer
  */
 
-struct direct *readdir (DIR *d)
+struct direct *bsd_readdir (DIR *d)
 {
 				/* loop through directory */
   while (d->dd_loc < d->dd_size) {

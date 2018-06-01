@@ -97,7 +97,7 @@ int portable_utime (char *file,time_t timep[2]);
 
 static char *myUserName = NIL;	/* user name */
 static char *myHomeDir = NIL;	/* home directory name */
-static char *myServerName = NIL;/* server name */
+char *myServerName = NIL;/* server name */
 static char *myLocalHost = NIL;	/* local host name */
 static char *myNewsrc = NIL;	/* newsrc file name */
 static char *mailsubdir = NIL;	/* mailbox subdirectory name */
@@ -145,8 +145,8 @@ static short allowuserconfig = NIL;
 static long disablePlaintext = NIL;
 static long list_max_level = 20;/* maximum level of list recursion */
 				/* facility for syslog */
-static int syslog_facility = LOG_MAIL;
-
+int syslog_facility = LOG_MAIL;
+
 /* Path of the privileged system lock program (mlock).  Normally set by
  * logic test.
  */
