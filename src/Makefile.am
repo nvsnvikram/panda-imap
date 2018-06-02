@@ -21,7 +21,6 @@ imapd_CFLAGS = -DANOFILE=\"/etc/anonymous.newsgroups\" \
 	-DLOCKPGM2=\"/usr/sbin/mlock\" \
 	-DLOCKPGM3=\"/etc/mlock\" \
 	-DLOCKPGM=\"\" \
-	-DSSL_KEY_DIRECTORY=\"/etc/ssl/private\" \
 	-I/usr/include/openssl  \
 	-DCHUNKSIZE=65536 \
 	-DCREATEPROTO=unixproto \

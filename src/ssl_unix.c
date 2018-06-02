@@ -774,14 +774,14 @@ ssl_server_init(char *server) {
              tcp_serveraddr());
      sprintf(key,
              "%s/%s-%s.pem",
-             SSL_KEY_DIRECTORY,
+             SSL_PRIVATE_KEY_PATH,
              server,
              tcp_serveraddr());
      /* use non-specific name if no specific cert */
      if (stat(cert, &sbuf))
           sprintf(cert, "%s/%s.pem", SSL_CA_PATH, server);
      if (stat(key, &sbuf)) {	/* use non-specific name if no specific key */
-          sprintf(key, "%s/%s.pem", SSL_KEY_DIRECTORY, server);
+          sprintf(key, "%s/%s.pem", SSL_PRIVATE_KEY_PATH, server);
           /* use cert file as fallback for key */
           if (stat(key, &sbuf))
                strcpy(key, cert);
