@@ -741,9 +741,9 @@ char *ssl_start_tls (char *server)
      if (sslstdio) return cpystr ("Already in an SSL session");
      if (start_tls) return cpystr ("TLS already started");
      if (server) {			/* build specific certificate/key file name */
-          sprintf (tmp,"%s/%s-%s.pem",SSL_CA_PATH,server,tcp_serveraddr ());
+          sprintf (tmp,"%s/%s-%s.pem",TLS_CA_PATH,server,tcp_serveraddr ());
           if (stat (tmp,&sbuf)) {	/* use non-specific name if no specific file */
-               sprintf (tmp,"%s/%s.pem",SSL_CA_PATH,server);
+               sprintf (tmp,"%s/%s.pem",TLS_CA_PATH,server);
                if (stat (tmp,&sbuf)) return cpystr ("Server certificate not installed");
           }
           start_tls = server;		/* switch to STARTTLS mode */
@@ -769,19 +769,19 @@ ssl_server_init(char *server) {
      /* build specific certificate/key file names */
      sprintf(cert,
              "%s/%s-%s.pem",
-             SSL_CA_PATH,
+             TLS_CA_PATH,
              server,
              tcp_serveraddr());
      sprintf(key,
              "%s/%s-%s.pem",
-             SSL_PRIVATE_KEY_PATH,
+             TLS_PRIVATE_KEY_PATH,
              server,
              tcp_serveraddr());
      /* use non-specific name if no specific cert */
      if (stat(cert, &sbuf))
-          sprintf(cert, "%s/%s.pem", SSL_CA_PATH, server);
+          sprintf(cert, "%s/%s.pem", TLS_CA_PATH, server);
      if (stat(key, &sbuf)) {	/* use non-specific name if no specific key */
-          sprintf(key, "%s/%s.pem", SSL_PRIVATE_KEY_PATH, server);
+          sprintf(key, "%s/%s.pem", TLS_PRIVATE_KEY_PATH, server);
           /* use cert file as fallback for key */
           if (stat(key, &sbuf))
                strcpy(key, cert);

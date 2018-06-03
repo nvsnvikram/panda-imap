@@ -50,6 +50,7 @@
 #include "mail.h"
 #include "misc.h"
 #include "env_unix.h"
+#include "config.h"
 
 /* Linux gets this wrong */
 
@@ -100,7 +101,7 @@ static char *myHomeDir = NIL;	/* home directory name */
 char *myServerName = NIL;/* server name */
 static char *myLocalHost = NIL;	/* local host name */
 static char *myNewsrc = NIL;	/* newsrc file name */
-static char *mailsubdir = NIL;	/* mailbox subdirectory name */
+static char *mailsubdir = MAILBOX_RELATIVE_PATH; /* mailbox subdirectory name */
 static char *sysInbox = NIL;	/* system inbox name */
 static char *newsActive = NIL;	/* news active file */
 static char *newsSpool = NIL;	/* news spool */

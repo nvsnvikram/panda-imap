@@ -8,7 +8,8 @@ AM_PROG_AR
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_FILES([Makefile src/Makefile])
 
-m4_include([ssl.m4])
+m4_include([tls.m4])
+m4_include([mail.m4])
 
 # Checks for programs.
 AC_PROG_LN_S
