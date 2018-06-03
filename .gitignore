@@ -16,7 +16,7 @@ ar-lib
 aclocal.m4
 autom4te.cache
 install-sh
-src/impad
+src/imapd
 src/.deps
 src/stamp-h1
 TAGS
