@@ -35,6 +35,7 @@
 #include <sys/stat.h>
 #include "c-client.h"
 #include "newsrc.h"
+#include "config.h"
 
 #define CRLF PSOUT ("\015\012")	/* primary output terpri */
 
@@ -212,7 +213,7 @@ char *lasterror (void);
 
 /* Global storage */
 
-char *version = "420";		/* edit number of this server */
+char *version = VERSION;	/* edit number of this server */
 char *logout = "Logout";	/* syslogreason for logout */
 char *goodbye = NIL;		/* bye reason */
 time_t alerttime = 0;		/* time of last alert */

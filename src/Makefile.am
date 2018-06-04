@@ -1,4 +1,4 @@
-bin_PROGRAMS = imapd
+sbin_PROGRAMS = imapd
 imapd_SOURCES = imapd.c imap4r1.c mail.c netmsg.c env_unix.c rfc822.c smtp.c \
 	nntp.c utf8.c newsrc.c tcp_unix.c fs_unix.c ftl_unix.c nl_unix.c \
 	getspnam.c gr_waitp.c tz_sv4.c flocklnx.c bsdutime.c ssl_unix.c misc.c \
