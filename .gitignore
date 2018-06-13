@@ -19,4 +19,9 @@ install-sh
 src/imapd
 src/.deps
 src/stamp-h1
+.deps/
+.dirstamp
+src/.dirstamp
+test/$(top_srcdir)/
+test/.deps/
 TAGS

@@ -64,19 +64,6 @@ HASHTAB {
 
 #define write safe_write
 
-
-/* Some C compilers have these as macros */
-
-#undef min
-#undef max
-
-
-/* And some C libraries have these as int functions */
-
-#define min Min
-#define max Max
-
-
 /* Compatibility definitions */
 
 #define pmatch(s,pat) \

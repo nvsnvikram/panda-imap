@@ -29,31 +29,13 @@
  * under grant number RR-00785.
  */
 
+#include <pwd.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <signal.h>
 #include "c-client.h"
 #include "imap4r1.h"
-
-/* Excellent reasons to hate ifdefs, and why my real code never uses them */
-
-#ifndef unix
-# define unix 0
-#endif
-
-#if unix
-# define UNIXLIKE 1
-# define MACOS 0
-# include <pwd.h>
-#else
-# define UNIXLIKE 0
-# ifdef noErr
-#  define MACOS 1
-#  include <Memory.h>
-# else
-#  define MACOS 0
-# endif
-#endif
+#include "misc.h"
 
 char *curhst = NIL;		/* currently connected host */
 char *curusr = NIL;		/* current login user */
