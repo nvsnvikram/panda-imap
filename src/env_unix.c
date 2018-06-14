@@ -1022,7 +1022,7 @@ char *sysinbox ()
 {
   char tmp[MAILTMPLEN];
   if (!sysInbox) {		/* initialize if first time */
-    sprintf (tmp,"%s/%s",MAILSPOOL,myusername ());
+    sprintf (tmp,"%s/%s",MAIL_SPOOL_PATH,myusername ());
     sysInbox = cpystr (tmp);	/* system inbox is from mail spool */
   }
   return sysInbox;

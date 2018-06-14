@@ -16,7 +16,6 @@ imapd_CFLAGS = -DANOFILE=\"/etc/anonymous.newsgroups\" \
 	-DANONYMOUSHOME=\"/var/spool/mail/anonymous\" \
 	-DACTIVEFILE=\"/var/lib/news/active\" \
 	-DNEWSSPOOL=\"/var/spool/news\" \
-	-DMAILSPOOL=\"/var/spool/mail\" \
 	-DLOCKPGM1=\"/usr/libexec/mlock\" \
 	-DLOCKPGM2=\"/usr/sbin/mlock\" \
 	-DLOCKPGM3=\"/etc/mlock\" \
