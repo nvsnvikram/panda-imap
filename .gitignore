@@ -24,4 +24,5 @@ src/stamp-h1
 src/.dirstamp
 test/$(top_srcdir)/
 test/.deps/
+test/mtest
 TAGS

@@ -328,7 +328,7 @@ int main (int argc,char *argv[])
 				/* arm APPENDUID callback */
   mail_parameters (NIL,SET_APPENDUID,(void *) appenduid);
 
-  if (stat (SHUTDOWNFILE,&sbuf)) {
+  if (stat (MAIL_NOLOGIN_FILE,&sbuf)) {
     char proxy[MAILTMPLEN];
     FILE *nntp = fopen (NNTPFILE,"r");
     if (nntp) {			/* desire NNTP proxy? */
@@ -1690,7 +1690,7 @@ void ping_mailbox (unsigned long uid)
   else if (time (0) > alerttime + ALERTTIMER) { 
     struct stat sbuf;
 				/* have a shutdown file? */
-    if (!stat (SHUTDOWNFILE,&sbuf)) {
+    if (!stat (MAIL_NOLOGIN_FILE,&sbuf)) {
       PSOUT ("* OK [ALERT] Server shutting down shortly\015\012");
       shutdowntime = time (0);
     }

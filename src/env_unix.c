@@ -152,7 +152,7 @@ int syslog_facility = LOG_MAIL;
  * logic test.
  */
 
-static char *lockpgm = LOCKPGM;
+static char *lockpgm = "";
 
 /* Directory used for shared locks.  MUST be the same for all users of the
  * system, and MUST be protected 1777.  /var/tmp may be preferable on some
@@ -348,7 +348,7 @@ void *env_parameters (long function,void *value)
     if (anonymousHome) fs_give ((void **) &anonymousHome);
     anonymousHome = cpystr ((char *) value);
   case GET_ANONYMOUSHOME:
-    if (!anonymousHome) anonymousHome = cpystr (ANONYMOUSHOME);
+    if (!anonymousHome) anonymousHome = cpystr (MAIL_ANONYMOUS_HOME_PATH);
     ret = (void *) anonymousHome;
     break;
   case SET_FTPHOME:
@@ -919,8 +919,8 @@ long env_init (char *user,char *home)
   }
   if (!myLocalHost) mylocalhost ();
   if (!myNewsrc) myNewsrc = cpystr(strcat (strcpy (tmp,myHomeDir),"/.newsrc"));
-  if (!newsActive) newsActive = cpystr (ACTIVEFILE);
-  if (!newsSpool) newsSpool = cpystr (NEWSSPOOL);
+  if (!newsActive) newsActive = cpystr (MAIL_ACTIVE_FILE);
+  if (!newsSpool) newsSpool = cpystr (MAIL_NEWS_SPOOL_PATH);
 				/* re-do open action to get flags */
   (*createProto->dtb->open) (NIL);
   endpwent ();			/* close pw database */
@@ -1236,8 +1236,10 @@ long dotlock_lock (char *file,DOTLOCK *base,int fd)
     MM_CRITICAL (NIL);		/* go critical */
     if (closedBox || !lockpgm);	/* can't do on closed box or disabled */
     else if ((*lockpgm && stat (lockpgm,&sb)) ||
-	     (!*lockpgm && stat (lockpgm = LOCKPGM1,&sb) &&
-	      stat (lockpgm = LOCKPGM2,&sb) && stat (lockpgm = LOCKPGM3,&sb)))
+	     (!*lockpgm
+              && stat(lockpgm = "/usr/libexec/mlock", &sb)
+              && stat(lockpgm = "/usr/sbin/mlock", &sb)
+              && stat(lockpgm = "/etc/mlock", &sb)))
       lockpgm = NIL;		/* disable if can't find lockpgm */
     else if (pipe (pi) >= 0) {	/* make command pipes */
       long cf;

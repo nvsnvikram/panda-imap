@@ -32,6 +32,7 @@
 #include <sys/stat.h>
 #include "env_unix.h"
 #include "misc.h"
+#include "config.h"
 #include "fs.h"
 
 /* MD5 context */
@@ -86,7 +87,7 @@ long auth_md5_valid (void)
 {
   struct stat sbuf;
 				/* server forbids MD5 if no MD5 enable file */
-  if (stat (MD5ENABLE,&sbuf)) auth_md5.server = NIL;
+  if (stat (MAIL_CRAM_MD5_FILE,&sbuf)) auth_md5.server = NIL;
   return T;			/* MD5 is otherwise valid */
 }
 
@@ -196,7 +197,7 @@ char *auth_md5_server (authresponse_t responder,int argc,char *argv[])
 char *auth_md5_pwd (char *user)
 {
   struct stat sbuf;
-  int fd = open (MD5ENABLE,O_RDONLY,NIL);
+  int fd = open (MAIL_CRAM_MD5_FILE,O_RDONLY,NIL);
   unsigned char *s,*t,*buf,*lusr,*lret;
   char *r;
   char *ret = NIL;

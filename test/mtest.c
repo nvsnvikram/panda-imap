@@ -35,6 +35,7 @@
 #include <signal.h>
 #include "c-client.h"
 #include "imap4r1.h"
+#include "env_unix.h"
 #include "misc.h"
 
 char *curhst = NIL;		/* currently connected host */
