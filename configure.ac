@@ -6,7 +6,7 @@ AM_PROG_CC_C_O
 AM_PROG_AR
 
 AC_CONFIG_HEADERS([src/config.h])
-AC_CONFIG_FILES([Makefile src/Makefile test/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile])
 
 # Customises settings.
 m4_include([tls.m4])
