@@ -17,6 +17,7 @@ aclocal.m4
 autom4te.cache
 install-sh
 src/imapd
+src/mtest
 src/.deps
 src/stamp-h1
 .deps/
@@ -24,5 +25,4 @@ src/stamp-h1
 src/.dirstamp
 test/$(top_srcdir)/
 test/.deps/
-test/mtest
 TAGS
