@@ -9,8 +9,7 @@ mtest_SOURCES = mtest.c ../src/mail.c ../src/misc.c ../src/rfc822.c \
 	../src/gr_waitp.c ../src/flocklnx.c ../src/newsrc.c ../src/netmsg.c \
 	../src/flstring.c ../src/pseudo.c ../src/bsdutime.c ../src/fdstring.c \
 	../src/opendir.c
-mtest_CFLAGS = -I../src \
-	-DCHUNKSIZE=65536 \
+mtest_CFLAGS = -DCHUNKSIZE=65536 \
 	-DCREATEPROTO=unixproto \
 	-DEMPTYPROTO=unixproto \
 	$(AM_CFLAGS)
