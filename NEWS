@@ -1,0 +1,9 @@
+panda-imap - Version History
+
+v421
+- migrated configuration and build to GNU autoconf
+- requires OpenSSL 1.1.0 (or higher)
+- requires Pluggable Authentication Modules for Linux (PAM)
+
+v420
+- last release using custom configuration and build recipies
