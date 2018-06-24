@@ -35,8 +35,7 @@
 #include "fs.h"
 #include "mail.h"
 #include "misc.h"
-
-#define NIL 0
+#include "types.h"
 
 #define SADRLEN sizeof (struct sockaddr)
 

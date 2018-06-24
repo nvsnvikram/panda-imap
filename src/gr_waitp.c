@@ -36,8 +36,7 @@
 #include <wait.h>
 #include <errno.h>
 #include <sys/types.h>
-
-#define NIL 0
+#include "types.h"
 
 void grim_pid_reap_status (int pid,int killreq,void *status)
 {

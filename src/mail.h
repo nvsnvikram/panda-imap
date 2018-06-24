@@ -28,6 +28,8 @@
 
 /* The Version */
 
+#include "types.h"
+
 #define CCLIENTVERSION "2018"
 
 /* Build parameters */
@@ -66,7 +68,6 @@
 
 /* Function status code */
 
-#define NIL 0			/* convenient name */
 #define T 1			/* opposite of NIL */
 #define LONGT (long) 1		/* long T to pacify some compilers */
 #define VOIDT (void *) ""	/* void T ditto */

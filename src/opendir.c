@@ -33,8 +33,8 @@
 #include <sys/stat.h>
 #include "opendir.h"
 #include "fs.h"
+#include "types.h"
 
-#define NIL 0
 /* Emulator for BSD opendir() call
  * Accepts: directory name
  * Returns: directory structure pointer

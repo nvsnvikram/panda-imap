@@ -603,9 +603,15 @@ void internal_date (char *date)
  *	    termination interrupt handler
  */
 
-void server_init (char *server,char *service,char *sslservice,
-		  void *clkint,void *kodint,void *hupint,void *trmint,
-		  void *staint)
+void
+server_init(char *server,
+            char *service,
+            char *sslservice,
+            void *clkint,
+            void *kodint,
+            void *hupint,
+            void *trmint,
+            void *staint)
 {
   int onceonly = server && service && sslservice;
   if (onceonly) {		/* set server name in syslog */
@@ -626,29 +632,36 @@ void server_init (char *server,char *service,char *sslservice,
   arm_signal (SIGPIPE,hupint);	/* alternative hangup */
   arm_signal (SIGTERM,trmint);	/* prepare for termination */
 				/* status dump */
-  if (staint) arm_signal (SIGUSR1,staint);
+  if (staint) arm_signal(SIGUSR1, staint);
   if (onceonly) {		/* set up network and maybe SSL */
-    long port;
-    struct servent *sv;
-    /* Use SSL if SSL service, or if server starts with "s" and not service */
-    if (((port = tcp_serverport ()) >= 0)) {
-      if ((sv = getservbyname (service,"tcp")) && (port == ntohs (sv->s_port)))
-	syslog (LOG_DEBUG,"%s service init from %s",service,tcp_clientaddr ());
-      else if ((sv = getservbyname (sslservice,"tcp")) &&
-	       (port == ntohs (sv->s_port))) {
-	syslog (LOG_DEBUG,"%s SSL service init from %s",sslservice,
-		tcp_clientaddr ());
-	ssl_server_init (server);
-      }
-      else {			/* not service or SSL service port */
-	syslog (LOG_DEBUG,"port %ld service init from %s",port,
-		tcp_clientaddr ());
-	if (*server == 's') ssl_server_init (server);
-      }
-    }
+       long port;
+       struct servent *sv;
+       /* Use SSL if SSL service, or if server starts with "s" and !service */
+       if (((port = tcp_serverport()) >= 0)) {
+            if ((sv = getservbyname(service,"tcp"))
+                && (port == ntohs(sv->s_port)))
+                 syslog(LOG_DEBUG,
+                        "%s service init from %s",
+                        service,
+                        tcp_clientaddr());
+            else if ((sv = getservbyname(sslservice,"tcp"))
+                     && (port == ntohs(sv->s_port))) {
+                 syslog(LOG_DEBUG,
+                        "%s SSL service init from %s",
+                        sslservice,
+                        tcp_clientaddr());
+                 ssl_server_init(server);
+            } else {            /* not service or SSL service port */
+                 syslog(LOG_DEBUG,
+                        "port %ld service init from %s",
+                        port,
+                        tcp_clientaddr());
+                 if (*server == 's') ssl_server_init (server);
+            }
+       }
   }
 }
-
+
 /* Wait for stdin input
  * Accepts: timeout in seconds
  * Returns: T if have input on stdin, else NIL

@@ -65,3 +65,39 @@ AC_ARG_WITH(nologin,
 AC_DEFINE_UNQUOTED([MAIL_NOLOGIN_FILE],
                    ["$with_nologin_file"],
                    [Define to nologin file])
+
+AC_ARG_WITH(nntp-file,
+            AS_HELP_STRING([--with-nntp-file=FILE],
+                           [set nntp file (default: /etc/imapd.nntp)]),
+            [with_nntp_file="$withval"],
+            [with_nntp_file=/etc/imapd.nntp])
+AC_DEFINE_UNQUOTED([MAIL_NNTP_FILE],
+                   ["$with_nntp_file"],
+                   [Define to nntp file])
+
+AC_ARG_WITH(alert-file,
+            AS_HELP_STRING([--with-alert-file=FILE],
+                           [set alert file (default: /etc/imapd.alert)]),
+            [with_alert_file="$withval"],
+            [with_alert_file=/etc/imapd.alert])
+AC_DEFINE_UNQUOTED([MAIL_ALERT_FILE],
+                   ["$with_alert_file"],
+                   [Define to alert file])
+
+AC_ARG_WITH(anon-file,
+            AS_HELP_STRING([--with-anon-file=FILE],
+                           [set anonymous file (default: /etc/anonymous.newsgroups)]),
+            [with_anon_file="$withval"],
+            [with_anon_file=/etc/anonymous.newsgroups])
+AC_DEFINE_UNQUOTED([MAIL_ANONYMOUS_FILE],
+                   ["$with_anon_file"],
+                   [Define to anonymous file])
+
+AC_ARG_WITH(user-alert,
+            AS_HELP_STRING([--with-user-alert=FILE],
+                           [set user alert file (default: .imapalert)]),
+            [with_user_alert_file="$withval"],
+            [with_user_alert_file=.imapalert])
+AC_DEFINE_UNQUOTED([MAIL_USER_ALERT_FILE],
+                   ["$with_user_alert_file"],
+                   [Define to user alert file])

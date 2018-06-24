@@ -346,7 +346,7 @@ int main (int argc,char *argv[])
 
   if (stat (MAIL_NOLOGIN_FILE,&sbuf)) {
     char proxy[MAILTMPLEN];
-    FILE *nntp = fopen (NNTPFILE,"r");
+    FILE *nntp = fopen (MAIL_NNTP_FILE,"r");
     if (nntp) {			/* desire NNTP proxy? */
       if (fgets (proxy,MAILTMPLEN,nntp)) {
 				/* remove newline and set NNTP proxy */
@@ -560,7 +560,8 @@ int main (int argc,char *argv[])
 	  else if (arg && !(initial = snarf_base64 (&arg)))
 	    response = misarg;	/* optional second argument */
 	  else if (arg) response = badarg;
-	  else if (!strcmp (ucase (s),"ANONYMOUS") && !stat (ANOFILE,&sbuf)) {
+	  else if (!strcmp(ucase(s), "ANONYMOUS")
+                   && !stat(MAIL_ANONYMOUS_FILE, &sbuf)) {
 	    if (!(s = imap_responder ("",0,NIL)))
 	      response ="%.80s BAD AUTHENTICATE ANONYMOUS cancelled\015\012";
 	    else if (anonymous_login (argc,argv)) {
@@ -625,8 +626,9 @@ int main (int argc,char *argv[])
 		(pass = cpystr (snarf (&arg))))) response = misarg;
 	  else if (arg) response = badarg;
 				/* see if we allow anonymous */
-	  else if (!compare_cstring (user,"ANONYMOUS") &&
-		   !stat (ANOFILE,&sbuf) && anonymous_login (argc,argv)) {
+	  else if (!compare_cstring(user,"ANONYMOUS")
+                   && !stat(MAIL_ANONYMOUS_FILE, &sbuf)
+                   && anonymous_login(argc, argv)) {
 	    anonymous = T;	/* note we are anonymous */
 	    ucase (user);	/* make all uppercase for consistency */
 	    state = SELECT;	/* make select */
@@ -1711,9 +1713,10 @@ void ping_mailbox (unsigned long uid)
       shutdowntime = time (0);
     }
     alerttime = time (0);	/* output any new alerts */
-    sysalerttime = palert (ALERTFILE,sysalerttime);
+    sysalerttime = palert (MAIL_ALERT_FILE,sysalerttime);
     if (state != LOGIN)		/* do user alert if logged in */
-      useralerttime = palert (mailboxfile (tmp,USERALERTFILE),useralerttime);
+      useralerttime = palert(mailboxfile(tmp, MAIL_USER_ALERT_FILE),
+                             useralerttime);
   }
 }
 
@@ -3973,7 +3976,7 @@ void pcapability (long flag)
 	PSOUT (" AUTH=");
 	PSOUT (auth->name);
       }
-    if (!stat (ANOFILE,&sbuf)) PSOUT (" AUTH=ANONYMOUS");
+    if (!stat(MAIL_ANONYMOUS_FILE, &sbuf)) PSOUT(" AUTH=ANONYMOUS");
   }
 }
 

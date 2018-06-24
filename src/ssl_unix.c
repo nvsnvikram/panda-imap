@@ -24,6 +24,7 @@
  */
 
 #define crypt ssl_private_crypt
+#include "config.h"
 #include <openssl/x509v3.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
@@ -41,7 +42,6 @@
 #include "fs.h"
 #include "misc.h"
 #include "ftl.h"
-#include "config.h"
 
 #undef STRING
 #undef crypt
@@ -70,35 +70,35 @@ extern long tcpdebug;
 /* SSL I/O stream */
 
 typedef struct ssl_stream {
-     TCPSTREAM *tcpstream;		/* TCP stream */
-     SSL_CTX *context;		/* SSL context */
-     SSL *con;			/* SSL connection */
-     int ictr;			/* input counter */
-     char *iptr;			/* input pointer */
-     char ibuf[SSLBUFLEN];		/* input buffer */
+     TCPSTREAM *tcpstream;      /* TCP stream */
+     SSL_CTX *context;	        /* SSL context */
+     SSL *con;		        /* SSL connection */
+     int ictr;		        /* input counter */
+     char *iptr;		/* input pointer */
+     char ibuf[SSLBUFLEN];	/* input buffer */
 } SSLSTREAM;
 
 #include "sslio.h"
-
+
 /* Function prototypes */
 
-static SSLSTREAM *ssl_start(TCPSTREAM *tstream,char *host,unsigned long flags);
-static char *ssl_start_work (SSLSTREAM *stream,char *host,unsigned long flags);
-static int ssl_open_verify (int ok,X509_STORE_CTX *ctx);
-static char *ssl_validate_cert (X509 *cert,char *host);
-static long ssl_compare_hostnames (unsigned char *s,unsigned char *pat);
-static char *ssl_getline_work (SSLSTREAM *stream,unsigned long *size,
-			       long *contd);
-static long ssl_abort (SSLSTREAM *stream);
-static RSA *ssl_genkey (SSL *con,int export,int keylength);
-
+static SSLSTREAM *ssl_start(TCPSTREAM *tstream,
+                            char *host,
+                            unsigned long flags);
+static char *ssl_start_work(SSLSTREAM *stream, char *host, unsigned long flags);
+static int ssl_open_verify(int ok, X509_STORE_CTX *ctx);
+static char *ssl_getline_work(SSLSTREAM *stream,
+                              unsigned long *size,
+                              long *contd);
+static long ssl_abort(SSLSTREAM *stream);
+static RSA *ssl_genkey(SSL *con, int export, int keylength);
 
 /* Secure Sockets Layer network driver dispatch */
 
 static struct ssl_driver ssldriver = {
      ssl_open,			/* open connection */
      ssl_aopen,			/* open preauthenticated connection */
-     ssl_getline,			/* get a line */
+     ssl_getline,		/* get a line */
      ssl_getbuffer,		/* get a buffer */
      ssl_soutr,			/* output pushed data */
      ssl_sout,			/* output string */
@@ -106,7 +106,7 @@ static struct ssl_driver ssldriver = {
      ssl_host,			/* return host name */
      ssl_remotehost,		/* return remote host name */
      ssl_port,			/* return port number */
-     ssl_localhost			/* return local host name */
+     ssl_localhost		/* return local host name */
 };
 /* non-NIL if doing SSL primary I/O */
 static SSLSTDIOSTREAM *sslstdio = NIL;
@@ -317,7 +317,11 @@ ssl_start_work(SSLSTREAM *stream, char *host, unsigned long flags) {
      /* create connection */
      if (!(stream->con = (SSL *) SSL_new(stream->context)))
           return "SSL connection failed";
-
+     if (!(flags & NET_NOVALIDATECERT)) {
+          SSL_set_hostflags(stream->con, X509_CHECK_FLAG_NO_PARTIAL_WILDCARDS);
+          if (!SSL_set1_host(stream->con, host))
+               return "SSL host validation set-up failed";
+     }
      bio = BIO_new_socket(stream->tcpstream->tcpsi, BIO_NOCLOSE);
      SSL_set_bio(stream->con, bio, bio);
      SSL_set_connect_state(stream->con);
@@ -326,20 +330,6 @@ ssl_start_work(SSLSTREAM *stream, char *host, unsigned long flags) {
      /* now negotiate SSL */
      if (SSL_write(stream->con, "", 0) < 0)
           return ssl_last_error ? ssl_last_error : "SSL negotiation failed";
-     /* need to validate host names? */
-     if (!(flags & NET_NOVALIDATECERT) &&
-         (err = ssl_validate_cert(cert = SSL_get_peer_certificate(stream->con),
-                                  host))) {
-
-          /* /\* application callback *\/ */
-          /* if (scq) */
-          /*      return (*scq) (err, host, cert ? cert->name : "???") ? NIL : ""; */
-          /* /\* error message to return via mm_log() *\/ */
-          /* sprintf(tmp,"*%.128s: %.255s", err, cert ? cert->name : "???"); */
-          /* return ssl_last_error = cpystr(tmp); */
-
-          return "TODO";
-     }
      return NIL;
 }
 
@@ -372,76 +362,6 @@ ssl_open_verify (int ok, X509_STORE_CTX *ctx) {
                ssl_last_error = cpystr("");
      }
      return ok;
-}
-
-
-/* SSL validate certificate
- * Accepts: certificate
- *	    host to validate against
- * Returns: NIL if validated, else string of error message
- */
-
-static char*
-ssl_validate_cert(X509 *cert, char *host) {
-     int i, n;
-     char *s, *t, *ret;
-     void *ext;
-//     GENERAL_NAME *name;
-
-     /* make sure have a certificate */
-     if (!cert)
-          return "No certificate from server";
-
-     X509_NAME *name = X509_get_subject_name(cert);
-     if (!name)
-          return "No name in certificate";
-
-     
-     /* if (s = strstr(cert->name,"/CN=")) { */
-     /*      if (t = strchr (s += 4,'/')) *t = '\0'; */
-     /*      /\* host name matches pattern? *\/ */
-     /*      ret = ssl_compare_hostnames (host,s) ? NIL : */
-     /*           "Server name does not match certificate"; */
-     /*      if (t) *t = '/';		/\* restore smashed delimiter *\/ */
-     /*      /\* if mismatch, see if in extensions *\/ */
-     /*      if (ret && (ext = X509_get_ext_d2i (cert,NID_subject_alt_name,NIL,NIL)) && */
-     /*          (n = sk_GENERAL_NAME_num (ext))) */
-     /*           /\* older versions of OpenSSL use "ia5" instead of dNSName *\/ */
-     /*           for (i = 0; ret && (i < n); i++) */
-     /*                if ((name = sk_GENERAL_NAME_value (ext,i)) && */
-     /*                    (name->type = GEN_DNS) && (s = name->d.ia5->data) && */
-     /*                    ssl_compare_hostnames (host,s)) ret = NIL; */
-     /* } */
-     /* else ret = "Unable to locate common name in certificate"; */
-
-     return NIL;
-}
-
-/* Case-independent wildcard pattern match
- * Accepts: base string
- *	    pattern string
- * Returns: T if pattern matches base, else NIL
- */
-
-static long
-ssl_compare_hostnames(unsigned char *s, unsigned char *pat) {
-     long ret = NIL;
-     switch (*pat) {
-     case '*':			/* wildcard */
-          if (pat[1]) {		/* there must be a pattern suffix */
-				/* there is, scan base against it */
-               do if (ssl_compare_hostnames (s,pat+1)) ret = LONGT;
-               while (!ret && (*s != '.') && *s++);
-          }
-          break;
-     case '\0':			/* end of pattern */
-          if (!*s) ret = LONGT;	/* success if base is also at end */
-          break;
-     default:			/* non-wildcard, recurse if match */
-          if (!compare_uchar (*pat,*s)) ret = ssl_compare_hostnames (s+1,pat+1);
-          break;
-     }
-     return ret;
 }
 
 /* SSL receive line
@@ -750,7 +670,7 @@ char *ssl_start_tls (char *server)
      }
      return NIL;
 }
-
+
 /* Init server for SSL
  * Accepts: server name
  */
@@ -823,7 +743,7 @@ ssl_server_init(char *server) {
                else {			/* set file descriptor */
                     SSL_set_fd(stream->con, 0);
                     /* all OK if accepted */
-                    if (SSL_accept(stream->con) < 0)
+                    if (SSL_accept(stream->con) <= 0)
                          syslog(LOG_INFO,
                                 "Unable to accept SSL connection, host=%.80s",
                                 tcp_clienthost());
@@ -855,7 +775,7 @@ ssl_server_init(char *server) {
      ssl_close(stream);		 /* punt stream */
      exit(1);			 /* punt this program too */
 }
-
+
 /* Generate one-time key for server
  * Accepts: SSL connection
  *	    export flag

@@ -34,9 +34,7 @@
  */
 
 #include <string.h>
-
-#define NIL 0
-#define T   1
+#include "types.h"
 
 long pmatch_full (unsigned char *s,unsigned char *pat,unsigned char delim)
 {
