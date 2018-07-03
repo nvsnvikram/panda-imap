@@ -1,0 +1,16 @@
+#!/usr/bin/expect -f
+set force_conservative 0
+set timeout -1
+spawn ../src/imapd
+match_max 100000
+expect -re "^\\* PREAUTH "
+send -- "001 SELECT INBOX\r"
+expect -re "001 OK \\\[READ-WRITE] SELECT completed\r\r
+$"
+send -- "002 UNSELECT\r"
+expect -re "002 OK UNSELECT completed\r\r
+$"
+send -- "003 LOGOUT\r"
+expect -re "\\* BYE .+ IMAP4rev1 server terminating connection\r\r
+003 OK LOGOUT completed\r\r"
+expect eof
