@@ -1,4 +1,24 @@
-PANDA IMAP tookit notices:
+PANDA IMAP toolkit notices:
+
+OpenSSL 1.1.0 compatibility and switch to GNU autoconf build system was
+contributed by Michael Goldschmidt, and is
+
+ *  Copyright (C) 2016-2018 Michael Goldschmidt
+ *
+ *  This file is part of Panda IMAP.
+ *
+ *  Panda IMAP is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Panda IMAP is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with Panda IMAP.  If not, see <http://www.gnu.org/licenses/>.
 
 The Panda IMAP Toolkit (c-client API, dmail, imapd, ipop2d, ipop3d,
 mailutil, mlock, mtest, and tmail software; and its included text) was
