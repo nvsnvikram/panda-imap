@@ -3,6 +3,7 @@
 *.log
 *.gz
 *.trs
+*.sha256
 .dep
 Makefile
 Makefile.in
