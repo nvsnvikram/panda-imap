@@ -3,22 +3,30 @@
 
 1. How to Build
 
-Panda IMAP should compile on any reasonably recent Linux distribution like so:
+Panda IMAP should compile on any reasonably recent Linux distribution
+like so:
 
 $ ./configure
 $ make
 $ make check
 $ make install
 
-The configure script assumes defaults for some directories. Type './configure --help' to discover what they are.
+The configure script assumes defaults for some directories. Type
+'./configure --help' to discover what they are.
 
 2. Dependencies
 
-The binary depends on OpenSSL 1.1.0 (or higher) and Pluggable Authentication Modules for Linux (PAM).
+The binary depends on OpenSSL 1.1.0 (or higher) and Pluggable
+Authentication Modules for Linux (PAM).
 
 3. How to Operate
 
-Panda IMAP is an internet service and expects to be invoked by a listener such as xinetd. If your system uses xinetd then it is most likely that the configuration directory is /etc/xinetd.d. The listener daemon expects a file in that directory for each internet service. For example, to offer IMAP over TLS ("IMAPS"), create a file called 'imaps' with the following contents:
+Panda IMAP is an internet service and expects to be invoked by a
+listener such as xinetd. If your system uses xinetd then it is most
+likely that the configuration directory is /etc/xinetd.d. The listener
+daemon expects a file in that directory for each internet service. For
+example, to offer IMAP over TLS ("IMAPS"), create a file called
+'imaps' with the following contents:
 
 service imaps
 {
@@ -30,10 +38,18 @@ service imaps
 	groups		= yes
 }
 
-You may have to edit /etc/services such that there exists an entry for imaps like so:
+You may have to edit /etc/services such that there exists an entry for
+imaps like so:
 
 imaps		993/tcp
 
-If your system uses PAM then most likely you need to set up an authenticator for imap. The file name must be 'imap' (no trailing 's'). It probably works when you copy and rename an existing authenticator such as ftpd. If in doubt then consult your PAM manual.
+If your system uses PAM then most likely you need to set up an
+authenticator for imap. The file name must be 'imap' (no trailing
+'s'). It probably works when you copy and rename an existing
+authenticator such as ftpd. If in doubt then consult your PAM manual.
 
-Finally, you should setup TLS certificates. Panda IMAP expects certificates in PEM format by default in file '/etc/ssl/certs/imapd.pem'. The file must contain the unencrypted private key as well as the certificate. If in doubt then consult your OpenSSL manual.
+Finally, you should setup TLS certificates. Panda IMAP expects
+certificates in PEM format by default in file
+'/etc/ssl/certs/imapd.pem'. The file must contain the unencrypted
+private key as well as the certificate. If in doubt then consult your
+OpenSSL manual.
