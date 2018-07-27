@@ -1,12 +1,14 @@
                               Panda IMAP
                            VERSION HISTORY
 
-Updated: XX XX 2018, v421
+Updated: 27 July 2018, v421
 
 - migrated configuration and build to GNU autoconf
 - removed unmaintained ports
 - requires OpenSSL 1.1.0 (or higher)
 - requires Pluggable Authentication Modules for Linux (PAM)
+- discontinues POP daemon
+- retains Linux port only
 
 Updated: 27 May 2018, v420
 
