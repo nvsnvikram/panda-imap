@@ -3,4 +3,4 @@ dist_man_MANS = imapd.8
 EXTRA_DIST = NOTICE LICENSE
 
 chksum:
-	sha256sum panda-imap-421.tar.gz > panda-imap-421.tar.gz.sha256
+	sha256sum panda-imap-422.tar.gz > panda-imap-422.tar.gz.sha256
