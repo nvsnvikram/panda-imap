@@ -54,16 +54,6 @@ HASHTAB {
   HASHENT *table[1];		/* table */
 };
 
-
-/* KLUDGE ALERT!!!
- *
- * Yes, write() is overridden here instead of in osdep.  This
- * is because misc.h is one of the last files that most things #include, so
- * this should avoid problems with some system #include file.
- */
-
-#define write safe_write
-
 /* Compatibility definitions */
 
 #define pmatch(s,pat) \

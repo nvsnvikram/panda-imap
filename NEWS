@@ -1,6 +1,10 @@
                               Panda IMAP
                            VERSION HISTORY
 
+Updated: 30 July 2018, v422
+
+- removes infinite loop caused by erroneous define
+
 Updated: 27 July 2018, v421
 
 - migrated configuration and build to GNU autoconf
