@@ -1,5 +1,5 @@
 AC_PREREQ([2.67])
-AC_INIT([panda-imap], [422], [bugs@sequencedsystems.com])
+AC_INIT([panda-imap], [423], [bugs@sequencedsystems.com])
 AC_CONFIG_SRCDIR([src/imapd.c])
 AM_INIT_AUTOMAKE([-Wall -Werror])
 AM_PROG_CC_C_O

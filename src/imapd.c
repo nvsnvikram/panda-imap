@@ -306,6 +306,7 @@ int main (int argc,char *argv[])
   int ret = 0;
   time_t autologouttime = 0;
   char *pgmname;
+
 				/* if case we get borked immediately */
   if (setjmp (jmpenv)) _exit (1);
   pgmname = (argc && argv[0]) ?
@@ -427,6 +428,7 @@ int main (int argc,char *argv[])
       if ((t > cmdbuf) && (t[-1] == '\015')) --t;
       *t = '\0';		/* tie off LF or CRLF */
     }
+    syslog(LOG_INFO, "%s", cmdbuf);
     if (!t) {			/* probably line too long if not terminated */
       if (t = strchr (cmdbuf,' ')) {
 	if ((t - cmdbuf) > MAXTAG) t = NIL;
@@ -1044,6 +1046,7 @@ int main (int argc,char *argv[])
 	  if (!(s = snarf (&arg))) response = misarg;
 	  else if (arg) response = badarg;
 	  else if (nameok (NIL,s = bboardname (cmd,s))) {
+               syslog(LOG_INFO,"%s-%s", cmd, arg);
 	    DRIVER *factory = mail_valid (NIL,s,NIL);
 	    f = anonymous ? OP_ANONYMOUS | OP_READONLY :
 	      (((blackberry > 0) || (*cmd == 'S')) ? NIL : OP_READONLY);
